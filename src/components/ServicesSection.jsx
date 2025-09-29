@@ -131,16 +131,16 @@ export default function ServicesSection() {
             <p>A nossa experiência e dedicação refletem-se nos resultados</p>
           </div>
 
-          <div className="stats-grid">
+          <div className="home-stats-grid">
             {stats.map((stat, index) => (
               <div
                 key={index}
-                className="stat-item"
+                className="home-stat-item"
                 style={{ animationDelay: `${0.5 + index * 0.1}s` }}
               >
-                <div className="stat-number">{stat.number}</div>
-                <div className="stat-label">{stat.label}</div>
-                <div className="stat-subtext">{stat.subtext}</div>
+                <div className="home-stat-number">{stat.number}</div>
+                <div className="home-stat-label">{stat.label}</div>
+                <div className="home-stat-subtext">{stat.subtext}</div>
               </div>
             ))}
           </div>

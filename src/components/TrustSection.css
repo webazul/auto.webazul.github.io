@@ -167,17 +167,17 @@
 
 .indicators-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--home-space-2xl);
 }
 
 .indicator-card {
   text-align: center;
   opacity: 0;
   transform: translateY(20px);
-  padding: 2rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: var(--home-space-lg);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--home-radius-lg);
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
@@ -188,8 +188,9 @@
 }
 
 .indicator-card:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.15);
   transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(59, 130, 246, 0.3);
 }
 
 .indicator-icon {
@@ -199,21 +200,25 @@
 }
 
 .indicator-value {
-  font-size: 2rem;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 0.5rem;
+  font-size: var(--home-text-5xl);
+  font-weight: var(--home-font-extrabold);
+  color: #60a5fa;
+  margin-bottom: var(--home-space-sm);
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .indicator-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 0.75rem;
+  font-size: var(--home-text-lg);
+  font-weight: var(--home-font-semibold);
+  color: var(--home-white);
+  margin-bottom: var(--home-space-xs);
 }
 
 .indicator-description {
-  font-size: 0.9rem;
+  font-size: var(--home-text-sm);
   color: #94a3b8;
   line-height: 1.5;
 }
@@ -510,7 +515,7 @@
 
   .indicators-grid {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: var(--home-space-xl);
   }
 
   .indicators-header h3 {
