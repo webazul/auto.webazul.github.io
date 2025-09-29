@@ -1,0 +1,37 @@
+/*
+ * HOME PAGE - Isolated CSS
+ * Estilos específicos apenas para a página Home
+ * Não interfere com outras páginas (Dashboard, Login, etc.)
+ */
+
+/*
+ * Container principal da página Home
+ * Usado apenas pela div.home-page no componente Home
+ */
+.home-page {
+  /* Isolamento de contexto para evitar interferência */
+  isolation: isolate;
+
+  /* Garantir que elementos fixos (Header) não sejam cortados */
+  overflow-x: hidden;
+
+  /* Layout base para seções da Home */
+  position: relative;
+}
+
+/*
+ * Garantir que todas as seções da Home ocupem largura total
+ * Aplica-se apenas aos filhos diretos da .home-page
+ */
+.home-page > * {
+  width: 100%;
+  display: block;
+}
+
+/*
+ * NOTA:
+ * - Não há mais regras de layout geral (já estão no App.css)
+ * - Não há variáveis CSS (estão no home-design-system.css)
+ * - Não há estilos que podem afetar outras páginas
+ * - CSS mínimo e focado apenas na estrutura da Home
+ */

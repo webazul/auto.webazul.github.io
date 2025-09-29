@@ -1,0 +1,307 @@
+/*
+ * WEBAZUL CARS - HOME DESIGN SYSTEM
+ * Sistema de Design para Páginas Públicas (Home, Cars, etc.)
+ * Padronização Visual Consistente
+ */
+
+:root {
+  /* === SPACING SYSTEM === */
+  --home-space-xs: 0.25rem;    /* 4px */
+  --home-space-sm: 0.5rem;     /* 8px */
+  --home-space-md: 0.75rem;    /* 12px */
+  --home-space-lg: 1rem;       /* 16px */
+  --home-space-xl: 1.5rem;     /* 24px */
+  --home-space-2xl: 2rem;      /* 32px */
+  --home-space-3xl: 3rem;      /* 48px */
+  --home-space-4xl: 4rem;      /* 64px */
+  --home-space-5xl: 6rem;      /* 96px */
+
+  /* === TYPOGRAPHY === */
+  --home-text-xs: 0.75rem;     /* 12px */
+  --home-text-sm: 0.875rem;    /* 14px */
+  --home-text-base: 1rem;      /* 16px */
+  --home-text-lg: 1.125rem;    /* 18px */
+  --home-text-xl: 1.25rem;     /* 20px */
+  --home-text-2xl: 1.5rem;     /* 24px */
+  --home-text-3xl: 2rem;       /* 32px */
+  --home-text-4xl: 2.5rem;     /* 40px */
+  --home-text-5xl: 3rem;       /* 48px */
+
+  /* Font Weights */
+  --home-font-normal: 400;
+  --home-font-medium: 500;
+  --home-font-semibold: 600;
+  --home-font-bold: 700;
+  --home-font-extrabold: 800;
+
+  /* === BORDER RADIUS === */
+  --home-radius-sm: 0.5rem;    /* 8px */
+  --home-radius-md: 0.75rem;   /* 12px */
+  --home-radius-lg: 1rem;      /* 16px */
+  --home-radius-xl: 1.5rem;    /* 24px */
+  --home-radius-pill: 50px;    /* Pills */
+
+  /* === ICON SIZES === */
+  --home-icon-sm: 1rem;        /* 16px */
+  --home-icon-md: 1.25rem;     /* 20px */
+  --home-icon-lg: 1.5rem;      /* 24px */
+  --home-icon-xl: 2rem;        /* 32px */
+  --home-icon-2xl: 2.5rem;     /* 40px */
+  --home-icon-3xl: 3rem;       /* 48px */
+  --home-icon-4xl: 4rem;       /* 64px */
+
+  /* === COLORS === */
+  /* Brand */
+  --home-primary: #3b82f6;
+  --home-primary-hover: #2563eb;
+  --home-primary-light: #dbeafe;
+
+  /* Neutrals */
+  --home-white: #ffffff;
+  --home-gray-50: #f8fafc;
+  --home-gray-100: #f1f5f9;
+  --home-gray-200: #e2e8f0;
+  --home-gray-300: #cbd5e1;
+  --home-gray-500: #64748b;
+  --home-gray-600: #475569;
+  --home-gray-700: #334155;
+  --home-gray-800: #1e293b;
+  --home-gray-900: #0f172a;
+
+  /* Success */
+  --home-success: #10b981;
+  --home-success-hover: #059669;
+
+  /* === SHADOWS === */
+  --home-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --home-shadow-md: 0 4px 15px rgba(0, 0, 0, 0.1);
+  --home-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+  --home-shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.2);
+  --home-shadow-primary: 0 8px 25px rgba(59, 130, 246, 0.4);
+
+  /* === CONTAINER === */
+  --home-container-max: 1400px;
+  --home-container-padding: 2rem;
+
+  /* === HEADER === */
+  --home-header-height: 80px;
+  --home-header-bg: rgba(255, 255, 255, 0.95);
+  --home-header-bg-scrolled: rgba(255, 255, 255, 0.98);
+
+  /* === BUTTONS === */
+  --home-btn-height-sm: 2.25rem;   /* 36px */
+  --home-btn-height-md: 2.75rem;   /* 44px */
+  --home-btn-height-lg: 3.25rem;   /* 52px */
+  --home-btn-padding-sm: 0.75rem 1.5rem;
+  --home-btn-padding-md: 0.875rem 2rem;
+  --home-btn-padding-lg: 1rem 2.5rem;
+
+  /* === TRANSITIONS === */
+  --home-transition: 0.3s ease;
+  --home-transition-fast: 0.15s ease;
+}
+
+/* === COMPONENT BASE STYLES === */
+
+/* Container padrão */
+.home-container {
+  max-width: var(--home-container-max);
+  margin: 0 auto;
+  padding: 0 var(--home-container-padding);
+}
+
+/* Botões padronizados */
+.home-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--home-space-sm);
+  border: none;
+  border-radius: var(--home-radius-md);
+  font-weight: var(--home-font-semibold);
+  cursor: pointer;
+  transition: all var(--home-transition);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.home-btn-sm {
+  height: var(--home-btn-height-sm);
+  padding: var(--home-btn-padding-sm);
+  font-size: var(--home-text-sm);
+}
+
+.home-btn-md {
+  height: var(--home-btn-height-md);
+  padding: var(--home-btn-padding-md);
+  font-size: var(--home-text-base);
+}
+
+.home-btn-lg {
+  height: var(--home-btn-height-lg);
+  padding: var(--home-btn-padding-lg);
+  font-size: var(--home-text-lg);
+}
+
+.home-btn-primary {
+  background: linear-gradient(135deg, var(--home-primary) 0%, var(--home-primary-hover) 100%);
+  color: var(--home-white);
+  box-shadow: var(--home-shadow-primary);
+}
+
+.home-btn-primary:hover {
+  background: linear-gradient(135deg, var(--home-primary-hover) 0%, #1d4ed8 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(59, 130, 246, 0.5);
+}
+
+.home-btn-secondary {
+  background: var(--home-white);
+  color: var(--home-gray-700);
+  border: 2px solid var(--home-gray-200);
+}
+
+.home-btn-secondary:hover {
+  background: var(--home-gray-50);
+  border-color: var(--home-gray-300);
+  transform: translateY(-2px);
+}
+
+.home-btn-pill {
+  border-radius: var(--home-radius-pill);
+}
+
+/* Cards padronizados */
+.home-card {
+  background: var(--home-white);
+  border: 1px solid var(--home-gray-200);
+  border-radius: var(--home-radius-lg);
+  padding: var(--home-space-2xl);
+  box-shadow: var(--home-shadow-sm);
+  transition: all var(--home-transition);
+}
+
+.home-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--home-shadow-lg);
+  border-color: var(--home-gray-300);
+}
+
+/* Ícones padronizados */
+.home-icon-sm { font-size: var(--home-icon-sm); }
+.home-icon-md { font-size: var(--home-icon-md); }
+.home-icon-lg { font-size: var(--home-icon-lg); }
+.home-icon-xl { font-size: var(--home-icon-xl); }
+.home-icon-2xl { font-size: var(--home-icon-2xl); }
+.home-icon-3xl { font-size: var(--home-icon-3xl); }
+.home-icon-4xl { font-size: var(--home-icon-4xl); }
+
+/* Typography helpers */
+.home-heading-1 {
+  font-size: var(--home-text-5xl);
+  font-weight: var(--home-font-extrabold);
+  line-height: 1.1;
+  color: var(--home-gray-900);
+}
+
+.home-heading-2 {
+  font-size: var(--home-text-4xl);
+  font-weight: var(--home-font-bold);
+  line-height: 1.2;
+  color: var(--home-gray-900);
+}
+
+.home-heading-3 {
+  font-size: var(--home-text-3xl);
+  font-weight: var(--home-font-bold);
+  line-height: 1.3;
+  color: var(--home-gray-900);
+}
+
+.home-heading-4 {
+  font-size: var(--home-text-2xl);
+  font-weight: var(--home-font-semibold);
+  line-height: 1.4;
+  color: var(--home-gray-900);
+}
+
+.home-body-lg {
+  font-size: var(--home-text-xl);
+  line-height: 1.6;
+  color: var(--home-gray-600);
+}
+
+.home-body {
+  font-size: var(--home-text-base);
+  line-height: 1.6;
+  color: var(--home-gray-600);
+}
+
+.home-body-sm {
+  font-size: var(--home-text-sm);
+  line-height: 1.5;
+  color: var(--home-gray-500);
+}
+
+/* Form elements */
+.home-input {
+  background: var(--home-white);
+  border: 1px solid var(--home-gray-300);
+  border-radius: var(--home-radius-md);
+  padding: var(--home-space-md) var(--home-space-lg);
+  font-size: var(--home-text-base);
+  transition: all var(--home-transition);
+  color: var(--home-gray-900);
+}
+
+.home-input:focus {
+  outline: none;
+  border-color: var(--home-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.home-select {
+  background: var(--home-white);
+  border: 1px solid var(--home-gray-300);
+  border-radius: var(--home-radius-md);
+  padding: var(--home-space-md) var(--home-space-lg);
+  font-size: var(--home-text-base);
+  transition: all var(--home-transition);
+  color: var(--home-gray-900);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right var(--home-space-md) center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
+}
+
+.home-select:focus {
+  outline: none;
+  border-color: var(--home-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Responsive breakpoints helpers */
+@media (max-width: 768px) {
+  :root {
+    --home-container-padding: 1rem;
+  }
+
+  .home-heading-1 { font-size: var(--home-text-4xl); }
+  .home-heading-2 { font-size: var(--home-text-3xl); }
+  .home-heading-3 { font-size: var(--home-text-2xl); }
+
+  .home-card {
+    padding: var(--home-space-xl);
+  }
+}
+
+@media (max-width: 480px) {
+  .home-heading-1 { font-size: var(--home-text-3xl); }
+  .home-heading-2 { font-size: var(--home-text-2xl); }
+
+  .home-card {
+    padding: var(--home-space-lg);
+  }
+}

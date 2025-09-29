@@ -1,0 +1,12 @@
+{
+  "users": [
+    {
+      "localId": "temp-id-001",
+      "email": "jhony@webazul.pt",
+      "emailVerified": true,
+      "password": "WebAzul2024!",
+      "displayName": "Jhony WebAzul",
+      "disabled": false
+    }
+  ]
+}

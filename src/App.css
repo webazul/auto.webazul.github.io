@@ -1,0 +1,21 @@
+/* App Container - Full Width Layout */
+.app {
+  width: 100%;
+  min-height: 100vh;
+  display: block;
+  position: relative;
+}
+
+/* Ensure all route components take full width */
+.app > * {
+  width: 100%;
+  display: block;
+}
+
+/* Remove any constraints on root */
+#root {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}

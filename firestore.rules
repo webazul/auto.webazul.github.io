@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Stores - leitura pública (para identificar loja por domínio)
+    // Escrita apenas do owner
+    match /stores/{storeId} {
+      allow read: if true; // Público pode ler para identificar loja
+      allow write: if request.auth != null &&
+        request.auth.uid == resource.data.owner;
+    }
+
+    // Products - leitura pública (usuários não logados veem produtos)
+    // Escrita apenas se o usuário for owner da loja
+    match /products/{productId} {
+      allow read: if true; // Público pode ver produtos
+
+      allow create: if request.auth != null &&
+        request.auth.uid == get(/databases/$(database)/documents/stores/$(request.resource.data.storeId)).data.owner;
+
+      allow update, delete: if request.auth != null &&
+        request.auth.uid == get(/databases/$(database)/documents/stores/$(resource.data.storeId)).data.owner;
+    }
+
+    // Outras collections seguem o mesmo padrão
+    match /orders/{orderId} {
+      allow read: if true;
+      allow write: if request.auth != null &&
+        request.auth.uid == get(/databases/$(database)/documents/stores/$(request.resource.data.storeId)).data.owner;
+    }
+  }
+}

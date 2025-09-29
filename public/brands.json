@@ -1,0 +1,368 @@
+{
+    "brands": [
+        {
+            "nome": "Toyota",
+            "codigo": "JP"
+        },
+        {
+            "nome": "Ford",
+            "codigo": "US"
+        },
+        {
+            "nome": "Volkswagen",
+            "codigo": "DE"
+        },
+        {
+            "nome": "Hyundai",
+            "codigo": "KR"
+        },
+        {
+            "nome": "Honda",
+            "codigo": "JP"
+        },
+        {
+            "nome": "General Motors",
+            "codigo": "US"
+        },
+        {
+            "nome": "Stellantis",
+            "codigo": "NL"
+        },
+        {
+            "nome": "Mercedes-Benz",
+            "codigo": "DE"
+        },
+        {
+            "nome": "BMW",
+            "codigo": "DE"
+        },
+        {
+            "nome": "Renault",
+            "codigo": "FR"
+        },
+        {
+            "nome": "Nissan",
+            "codigo": "JP"
+        },
+        {
+            "nome": "Tesla",
+            "codigo": "US"
+        },
+        {
+            "nome": "Audi",
+            "codigo": "DE"
+        },
+        {
+            "nome": "Kia",
+            "codigo": "KR"
+        },
+        {
+            "nome": "Volvo",
+            "codigo": "SE"
+        },
+        {
+            "nome": "Fiat",
+            "codigo": "IT"
+        },
+        {
+            "nome": "Peugeot",
+            "codigo": "FR"
+        },
+        {
+            "nome": "Chevrolet",
+            "codigo": "US"
+        },
+        {
+            "nome": "Mazda",
+            "codigo": "JP"
+        },
+        {
+            "nome": "Subaru",
+            "codigo": "JP"
+        },
+        {
+            "nome": "Suzuki",
+            "codigo": "JP"
+        },
+        {
+            "nome": "Mitsubishi",
+            "codigo": "JP"
+        },
+        {
+            "nome": "Porsche",
+            "codigo": "DE"
+        },
+        {
+            "nome": "Land Rover",
+            "codigo": "GB"
+        },
+        {
+            "nome": "Jaguar",
+            "codigo": "GB"
+        },
+        {
+            "nome": "Mini",
+            "codigo": "GB"
+        },
+        {
+            "nome": "Citroën",
+            "codigo": "FR"
+        },
+        {
+            "nome": "DS Automobiles",
+            "codigo": "FR"
+        },
+        {
+            "nome": "Alfa Romeo",
+            "codigo": "IT"
+        },
+        {
+            "nome": "Jeep",
+            "codigo": "US"
+        },
+        {
+            "nome": "Dodge",
+            "codigo": "US"
+        },
+        {
+            "nome": "Chrysler",
+            "codigo": "US"
+        },
+        {
+            "nome": "Ram",
+            "codigo": "US"
+        },
+        {
+            "nome": "Opel",
+            "codigo": "DE"
+        },
+        {
+            "nome": "Vauxhall",
+            "codigo": "GB"
+        },
+        {
+            "nome": "Skoda",
+            "codigo": "CZ"
+        },
+        {
+            "nome": "Seat",
+            "codigo": "ES"
+        },
+        {
+            "nome": "Bentley",
+            "codigo": "GB"
+        },
+        {
+            "nome": "Rolls-Royce",
+            "codigo": "GB"
+        },
+        {
+            "nome": "Aston Martin",
+            "codigo": "GB"
+        },
+        {
+            "nome": "McLaren",
+            "codigo": "GB"
+        },
+        {
+            "nome": "Ferrari",
+            "codigo": "IT"
+        },
+        {
+            "nome": "Lamborghini",
+            "codigo": "IT"
+        },
+        {
+            "nome": "Maserati",
+            "codigo": "IT"
+        },
+        {
+            "nome": "Saab",
+            "codigo": "SE"
+        },
+        {
+            "nome": "Infiniti",
+            "codigo": "JP"
+        },
+        {
+            "nome": "Lexus",
+            "codigo": "JP"
+        },
+        {
+            "nome": "Acura",
+            "codigo": "JP"
+        },
+        {
+            "nome": "Buick",
+            "codigo": "US"
+        },
+        {
+            "nome": "Cadillac",
+            "codigo": "US"
+        },
+        {
+            "nome": "GMC",
+            "codigo": "US"
+        },
+        {
+            "nome": "Genesis",
+            "codigo": "KR"
+        },
+        {
+            "nome": "Lincoln",
+            "codigo": "US"
+        },
+        {
+            "nome": "Rivian",
+            "codigo": "US"
+        },
+        {
+            "nome": "Lucid",
+            "codigo": "US"
+        },
+        {
+            "nome": "Polestar",
+            "codigo": "SE"
+        },
+        {
+            "nome": "BYD",
+            "codigo": "CN"
+        },
+        {
+            "nome": "Geely",
+            "codigo": "CN"
+        },
+        {
+            "nome": "Great Wall",
+            "codigo": "CN"
+        },
+        {
+            "nome": "Chery",
+            "codigo": "CN"
+        },
+        {
+            "nome": "NIO",
+            "codigo": "CN"
+        },
+        {
+            "nome": "XPeng",
+            "codigo": "CN"
+        },
+        {
+            "nome": "Li Auto",
+            "codigo": "CN"
+        },
+        {
+            "nome": "Tata",
+            "codigo": "IN"
+        },
+        {
+            "nome": "Mahindra",
+            "codigo": "IN"
+        },
+        {
+            "nome": "Maruti Suzuki",
+            "codigo": "IN"
+        },
+        {
+            "nome": "VinFast",
+            "codigo": "VN"
+        },
+        {
+            "nome": "Proton",
+            "codigo": "MY"
+        },
+        {
+            "nome": "Perodua",
+            "codigo": "MY"
+        },
+        {
+            "nome": "Lada",
+            "codigo": "RU"
+        },
+        {
+            "nome": "UAZ",
+            "codigo": "RU"
+        },
+        {
+            "nome": "Iran Khodro",
+            "codigo": "IR"
+        },
+        {
+            "nome": "SAIPA",
+            "codigo": "IR"
+        },
+        {
+            "nome": "FAW",
+            "codigo": "CN"
+        },
+        {
+            "nome": "Dongfeng",
+            "codigo": "CN"
+        },
+        {
+            "nome": "Changan",
+            "codigo": "CN"
+        },
+        {
+            "nome": "SAIC",
+            "codigo": "CN"
+        },
+        {
+            "nome": "Haval",
+            "codigo": "CN"
+        },
+        {
+            "nome": "Wey",
+            "codigo": "CN"
+        },
+        {
+            "nome": "Lynk & Co",
+            "codigo": "CN"
+        },
+        {
+            "nome": "Volvo Cars",
+            "codigo": "SE"
+        },
+        {
+            "nome": "SsangYong",
+            "codigo": "KR"
+        },
+        {
+            "nome": "Daewoo",
+            "codigo": "KR"
+        },
+        {
+            "nome": "Isuzu",
+            "codigo": "JP"
+        },
+        {
+            "nome": "Daihatsu",
+            "codigo": "JP"
+        },
+        {
+            "nome": "Hino",
+            "codigo": "JP"
+        },
+        {
+            "nome": "Dacia",
+            "codigo": "RO"
+        },
+        {
+            "nome": "Lancia",
+            "codigo": "IT"
+        },
+        {
+            "nome": "Abarth",
+            "codigo": "IT"
+        },
+        {
+            "nome": "Fisker",
+            "codigo": "US"
+        },
+        {
+            "nome": "Lotus",
+            "codigo": "GB"
+        }
+    ]
+}
