@@ -1691,7 +1691,7 @@ export default function Dashboard() {
                   <FaPlus />
                   <span>Adicionar Carro</span>
                 </button>
-                <button
+                {/* <button
                   className="add-btn"
                   style={{ background: '#f59e0b', borderColor: '#f59e0b' }}
                   onClick={generateTestData}
@@ -1699,7 +1699,7 @@ export default function Dashboard() {
                 >
                   🧪
                   <span>Dados Teste</span>
-                </button>
+                </button> */}
               </div>
             </div>
 
@@ -1934,7 +1934,7 @@ export default function Dashboard() {
                   <FaPlus />
                   <span>Adicionar Cliente</span>
                 </button>
-                <button
+                {/* <button
                   className="add-btn"
                   style={{ background: '#f59e0b', borderColor: '#f59e0b' }}
                   onClick={generateTestClients}
@@ -1942,7 +1942,7 @@ export default function Dashboard() {
                 >
                   🧪
                   <span>Dados Teste</span>
-                </button>
+                </button> */}
               </div>
             </div>
 

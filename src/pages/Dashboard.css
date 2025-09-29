@@ -1215,8 +1215,8 @@
   }
 
   .dashboard-main.sidebar-collapsed {
-    margin-left: var(--admin-sidebar-collapsed-width);
-    width: calc(100% - var(--admin-sidebar-collapsed-width));
+    margin-left: var(--admin-sidebar-collapsed);
+    width: calc(100% - var(--admin-sidebar-collapsed));
   }
 }
 

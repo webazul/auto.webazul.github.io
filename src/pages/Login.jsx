@@ -18,8 +18,8 @@ import '../styles/admin-design-system.css'
 import './Login.css'
 
 export default function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('auto@webazul.pt')
+  const [password, setPassword] = useState('12345678')
   const [resetEmail, setResetEmail] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
