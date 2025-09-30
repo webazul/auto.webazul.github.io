@@ -207,7 +207,7 @@
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding: 2rem 0;
   background: rgba(0, 0, 0, 0.2);
-  margin: 0 -2rem;
+  width: 100%;
 }
 
 .footer-bottom-content {
@@ -216,9 +216,9 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
-  max-width: 1400px;
+  max-width: var(--home-container-max);
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 var(--home-container-padding);
 }
 
 .footer-legal {

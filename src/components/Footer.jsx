@@ -11,13 +11,18 @@ import {
   FaArrowUp,
   FaGlobe
 } from 'react-icons/fa'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../contexts/AuthContext'
 import './Footer.css'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
-  const [selectedLanguage, setSelectedLanguage] = useState('pt')
+  const { t, i18n } = useTranslation()
   const { currentStore } = useAuth()
+
+  const handleLanguageChange = (language) => {
+    i18n.changeLanguage(language)
+  }
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -57,15 +62,14 @@ export default function Footer() {
                 )}
               </div>
               <p>
-                O seu parceiro de confiança na compra do carro perfeito.
-                Qualidade, transparência e satisfação garantida em cada negócio.
+                {t('footer.description')}
               </p>
 
               <div className="footer-language-selector">
                 <FaGlobe />
                 <select
-                  value={selectedLanguage}
-                  onChange={(e) => setSelectedLanguage(e.target.value)}
+                  value={i18n.language}
+                  onChange={(e) => handleLanguageChange(e.target.value)}
                   className="footer-language-select"
                 >
                   <option value="pt">🇵🇹 Português</option>
@@ -80,82 +84,82 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div className="footer-section">
-            <h4>Links Rápidos</h4>
+            <h4>{t('footer.quickLinks')}</h4>
             <div className="footer-links">
               <a href="/" onClick={(e) => { e.preventDefault(); scrollToSection('hero'); }}>
-                Início
+                {t('footer.home')}
               </a>
               <a href="/cars">
-                Stock de Carros
+                {t('footer.stock')}
               </a>
               <a href="/" onClick={(e) => { e.preventDefault(); scrollToSection('services'); }}>
-                Serviços
+                {t('footer.services')}
               </a>
               <a href="/" onClick={(e) => { e.preventDefault(); scrollToSection('trust'); }}>
-                Sobre Nós
+                {t('footer.about')}
               </a>
               <a href="/" onClick={(e) => { e.preventDefault(); scrollToSection('testimonials'); }}>
-                Testemunhos
+                {t('footer.testimonials')}
               </a>
             </div>
           </div>
 
           {/* Social Media */}
           <div className="footer-section">
-            <h4>Siga-nos</h4>
+            <h4>{t('footer.followUs')}</h4>
             <div className="social-links">
               <a href="https://instagram.com/webazulcars" className="social-link" aria-label="Instagram">
                 <FaInstagram />
-                <span>Instagram</span>
+                <span>{t('footer.instagram')}</span>
               </a>
               <a href="https://facebook.com/webazulcars" className="social-link" aria-label="Facebook">
                 <FaFacebookF />
-                <span>Facebook</span>
+                <span>{t('footer.facebook')}</span>
               </a>
               <a href="https://twitter.com/webazulcars" className="social-link" aria-label="Twitter">
                 <FaTwitter />
-                <span>Twitter</span>
+                <span>{t('footer.twitter')}</span>
               </a>
               <a href="https://linkedin.com/company/webazulcars" className="social-link" aria-label="LinkedIn">
                 <FaLinkedinIn />
-                <span>LinkedIn</span>
+                <span>{t('footer.linkedin')}</span>
               </a>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Footer Bottom */}
-        <div className="footer-bottom">
-          <div className="footer-bottom-content">
-            <div className="footer-legal">
-              <p>&copy; {currentYear} AutoAzul. Todos os direitos reservados.</p>
-              <div className="legal-links">
-                <a href="/privacy" className="legal-link">Política de Privacidade</a>
-                <a href="/terms" className="legal-link">Termos de Serviço</a>
-                <a href="/cookies" className="legal-link">Política de Cookies</a>
-              </div>
+      {/* Footer Bottom */}
+      <div className="footer-bottom">
+        <div className="footer-bottom-content">
+          <div className="footer-legal">
+            <p>&copy; {currentYear} AutoAzul. {t('footer.rights')}</p>
+            <div className="legal-links">
+              <a href="/privacy" className="legal-link">{t('footer.privacyPolicy')}</a>
+              <a href="/terms" className="legal-link">{t('footer.termsService')}</a>
+              <a href="/cookies" className="legal-link">{t('footer.cookies')}</a>
             </div>
-            <div className="footer-credits">
-              <p>
-                Desenvolvido com ❤️ por{' '}
-                <a
-                  href="https://webazul.pt"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="webazul-link"
-                >
-                  WebAzul
-                </a>
-              </p>
-              <button
-                className="back-to-top"
-                onClick={scrollToTop}
-                aria-label="Voltar ao topo"
+          </div>
+          <div className="footer-credits">
+            <p>
+              {t('footer.developedBy')}{' '}
+              <a
+                href="https://webazul.pt"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="webazul-link"
               >
-                <FaArrowUp />
-                <span>Topo</span>
-              </button>
-            </div>
+                {t('footer.webazul')}
+              </a>
+            </p>
+            <button
+              className="back-to-top"
+              onClick={scrollToTop}
+              aria-label={t('footer.backToTop')}
+            >
+              <FaArrowUp />
+              <span>{t('footer.backToTop')}</span>
+            </button>
           </div>
         </div>
       </div>

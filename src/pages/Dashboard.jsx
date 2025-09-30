@@ -44,7 +44,8 @@ import {
   FaCoins,
   FaLink,
   FaUserCircle,
-  FaHistory
+  FaHistory,
+  FaFileDownload
 } from 'react-icons/fa'
 import '../styles/admin-design-system.css'
 import './Dashboard.css'
@@ -1372,6 +1373,123 @@ export default function Dashboard() {
     }
   }
 
+  // Função para exportar produtos para CSV
+  const exportToCSV = () => {
+    if (!allProducts || allProducts.length === 0) {
+      alert('Nenhum produto disponível para exportar.')
+      return
+    }
+
+    // Cabeçalhos do CSV
+    const headers = [
+      'Nome',
+      'Marca',
+      'Modelo',
+      'Versão',
+      'Ano',
+      'Preço',
+      'Preço_Original',
+      'Promocional',
+      'Quilómetros',
+      'Combustível',
+      'Potência_CV',
+      'Cilindrada',
+      'Transmissão',
+      'Cor',
+      'Portas',
+      'Lugares',
+      'Condição',
+      'Descrição',
+      'URL_Foto_Principal',
+      'URL_Foto_1',
+      'URL_Foto_2',
+      'URL_Foto_3',
+      'URL_Foto_4',
+      'Número_Stock',
+      'Data_Matrícula',
+      'Imposto_Mensal',
+      'Imposto_Anual',
+      'Selo',
+      'Taxa_Moderador',
+      'Status'
+    ]
+
+    // Converter produtos para linhas CSV
+    const rows = allProducts.map(product => {
+      // Extrair URLs das fotos da galeria
+      const galleryUrls = product.gallery || []
+      const foto1 = galleryUrls[0] || ''
+      const foto2 = galleryUrls[1] || ''
+      const foto3 = galleryUrls[2] || ''
+      const foto4 = galleryUrls[3] || ''
+
+      return [
+        product.name || '',
+        product.brand || '',
+        product.model || '',
+        product.version || '',
+        product.year || '',
+        product.price || '',
+        product.originalPrice || '',
+        product.isPromotional ? 'Sim' : 'Não',
+        product.mileage || '',
+        product.fuel || '',
+        product.power || '',
+        product.displacement || '',
+        product.transmission || '',
+        product.color || '',
+        product.doors || '',
+        product.seats || '',
+        product.condition || '',
+        product.description || '',
+        product.profilePhoto || '',
+        foto1,
+        foto2,
+        foto3,
+        foto4,
+        product.stockNumber || '',
+        product.registrationDate || '',
+        product.monthlyTax || '',
+        product.annualTax || '',
+        product.stamp || '',
+        product.moderatorFee || '',
+        product.status || ''
+      ]
+    })
+
+    // Escapar valores CSV (adicionar aspas se contiver vírgula ou quebra de linha)
+    const escapeCSV = (value) => {
+      if (value == null) return ''
+      const stringValue = String(value)
+      if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
+        return `"${stringValue.replace(/"/g, '""')}"`
+      }
+      return stringValue
+    }
+
+    // Criar conteúdo CSV
+    const csvContent = [
+      headers.map(escapeCSV).join(','),
+      ...rows.map(row => row.map(escapeCSV).join(','))
+    ].join('\n')
+
+    // Criar Blob e fazer download
+    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' }) // \ufeff = BOM para UTF-8
+    const link = document.createElement('a')
+    const url = URL.createObjectURL(blob)
+
+    // Nome do arquivo com data atual
+    const today = new Date().toISOString().split('T')[0]
+    const fileName = `webazul-cars-${today}.csv`
+
+    link.setAttribute('href', url)
+    link.setAttribute('download', fileName)
+    link.style.visibility = 'hidden'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: FaHome },
     { id: 'cars', label: 'Carros', icon: FaCar },
@@ -1626,6 +1744,15 @@ export default function Dashboard() {
                 >
                   <FaPlus />
                   <span>Adicionar Carro</span>
+                </button>
+                <button
+                  className="add-btn"
+                  style={{ background: '#10b981', borderColor: '#10b981' }}
+                  onClick={exportToCSV}
+                  title="Exportar todos os carros para CSV"
+                >
+                  <FaFileDownload />
+                  <span>Exportar CSV</span>
                 </button>
                 <button
                   className="add-btn"

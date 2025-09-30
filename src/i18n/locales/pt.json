@@ -1,0 +1,205 @@
+{
+  "header": {
+    "home": "Início",
+    "stock": "Stock",
+    "services": "Serviços",
+    "contact": "Contacto",
+    "dashboard": "Dashboard"
+  },
+  "hero": {
+    "title": "Encontre o Seu",
+    "titleHighlight": " Carro Perfeito,",
+    "titleEnd": "Rápido e Fácil",
+    "subtitle": "A sua próxima viagem começa aqui. Explore nossa coleção premium de veículos selecionados com garantia e transparência total.",
+    "ctaPrimary": "Ver Stock Disponível",
+    "ctaSecondary": "Entre em Contato"
+  },
+  "search": {
+    "title": "Buscar Carros",
+    "brand": "Marca",
+    "brandPlaceholder": "Todas as marcas",
+    "model": "Modelo",
+    "modelPlaceholder": "Ex: Golf, A4, Serie 3...",
+    "priceMin": "Preço Mínimo",
+    "priceMinPlaceholder": "Ex: 15.000",
+    "priceMax": "Preço Máximo",
+    "priceMaxPlaceholder": "Ex: 25.000",
+    "yearMin": "Ano Mínimo",
+    "yearMinPlaceholder": "Ex: 2018",
+    "yearMax": "Ano Máximo",
+    "yearMaxPlaceholder": "Ex: 2024",
+    "fuel": "Combustível",
+    "fuelPlaceholder": "Qualquer tipo",
+    "kmMax": "KM Máximo",
+    "kmMaxPlaceholder": "Ex: 100.000",
+    "searchButton": "Buscar Carros",
+    "emptyTitle": "Nenhum carro encontrado",
+    "emptyDescription": "Tente ajustar os filtros para encontrar o veículo ideal.",
+    "loadingTitle": "Carregando carros...",
+    "loadingDescription": "Aguarde enquanto buscamos os veículos disponíveis.",
+    "viewAllCars": "Ver Todos os Carros"
+  },
+  "services": {
+    "title": "O Que Oferecemos",
+    "subtitle": "Serviços completos para uma experiência de compra excepcional",
+    "warranty": {
+      "title": "Garantia Completa",
+      "description": "Todos os carros com garantia de 12 meses e suporte técnico completo",
+      "feature1": "12 meses de garantia",
+      "feature2": "Suporte 24/7",
+      "feature3": "Peças originais"
+    },
+    "documentation": {
+      "title": "Documentação Legal",
+      "description": "Tratamos de toda a documentação e transferências necessárias",
+      "feature1": "Documentação completa",
+      "feature2": "Transferência gratuita",
+      "feature3": "Suporte legal"
+    },
+    "support": {
+      "title": "Apoio ao Cliente",
+      "description": "Equipa dedicada para apoio pós-venda e esclarecimento de dúvidas",
+      "feature1": "Apoio personalizado",
+      "feature2": "Resposta rápida",
+      "feature3": "Satisfação garantida"
+    },
+    "badge": "Mais Popular",
+    "learnMore": "Saber Mais",
+    "statsTitle": "Números que Falam por Si",
+    "statsSubtitle": "A nossa experiência e dedicação refletem-se nos resultados",
+    "stat1": {
+      "number": "98%",
+      "label": "Clientes Satisfeitos",
+      "subtext": "Avaliações positivas"
+    },
+    "stat2": {
+      "number": "500+",
+      "label": "Carros Vendidos",
+      "subtext": "Em 2024"
+    },
+    "stat3": {
+      "number": "24h",
+      "label": "Aprovação Crédito",
+      "subtext": "Resposta garantida"
+    },
+    "stat4": {
+      "number": "12",
+      "label": "Meses Garantia",
+      "subtext": "Em todos os veículos"
+    },
+    "ctaTitle": "Pronto para Encontrar o Seu Próximo Carro?",
+    "ctaDescription": "Explore o nosso stock e desfrute de todos estes serviços premium",
+    "ctaPrimary": "Ver Stock Disponível",
+    "ctaSecondary": "Entre em Contato"
+  },
+  "trust": {
+    "title": "Porquê Escolher-nos?",
+    "subtitle": "Certificações, garantias e compromisso com a excelência",
+    "cert1": {
+      "title": "ISO 9001:2015",
+      "subtitle": "Qualidade Certificada",
+      "description": "Certificação internacional de gestão da qualidade"
+    },
+    "cert2": {
+      "title": "ACAP Portugal",
+      "subtitle": "Membro Oficial",
+      "description": "Associação do Comércio Automóvel de Portugal"
+    },
+    "cert3": {
+      "title": "Prémio Excelência",
+      "subtitle": "Melhor Stand 2024",
+      "description": "Reconhecimento pela qualidade dos serviços"
+    },
+    "cert4": {
+      "title": "Selo Confiança",
+      "subtitle": "Empresa Verificada",
+      "description": "Validação de credibilidade e transparência"
+    },
+    "indicatorsTitle": "Indicadores de Confiança",
+    "indicatorsSubtitle": "Números que demonstram o nosso compromisso",
+    "indicator1": {
+      "title": "Transações Seguras",
+      "value": "100%",
+      "description": "Pagamentos protegidos e documentação legal completa"
+    },
+    "indicator2": {
+      "title": "Garantia Total",
+      "value": "12 meses",
+      "description": "Cobertura completa em todos os veículos vendidos"
+    },
+    "indicator3": {
+      "title": "Satisfação Cliente",
+      "value": "4.9/5",
+      "description": "Avaliação média baseada em mais de 200 reviews"
+    }
+  },
+  "testimonials": {
+    "title": "O Que Dizem Os Nossos Clientes",
+    "subtitle": "Histórias reais de satisfação e confiança",
+    "carPurchased": "Carro adquirido:"
+  },
+  "contact": {
+    "title": "Fale Connosco",
+    "subtitle": "Estamos aqui para ajudá-lo a encontrar o carro perfeito. Entre em contato e receba atendimento personalizado.",
+    "contactInfo": "Contacto",
+    "form": {
+      "name": "Nome Completo",
+      "namePlaceholder": "O seu nome completo",
+      "email": "Email",
+      "emailPlaceholder": "seu@email.com",
+      "phone": "Telefone",
+      "phonePlaceholder": "+351 912 345 678",
+      "subject": "Assunto",
+      "subjectPlaceholder": "Selecione um assunto",
+      "subjectOptions": {
+        "info": "Informações sobre veículos",
+        "visit": "Agendamento de visita",
+        "financing": "Financiamento",
+        "tradein": "Retoma de veículo",
+        "aftersales": "Apoio pós-venda",
+        "other": "Outro"
+      },
+      "message": "Mensagem",
+      "messagePlaceholder": "Escreva aqui a sua mensagem...",
+      "submit": "Enviar Mensagem",
+      "submitting": "Enviando...",
+      "required": "*"
+    },
+    "info": {
+      "location": "Localização",
+      "locationAddress": "Av. da República, 1500",
+      "locationCity": "1069-124 Lisboa",
+      "phone": "Telefone",
+      "phoneNumber": "+351 21 123 4567",
+      "phoneHours": "Seg-Sex: 9h-19h",
+      "email": "Email",
+      "emailAddress": "info@webazulcars.pt",
+      "emailResponse": "Resposta em 24h"
+    },
+    "demo": {
+      "title": "Site de Demonstração",
+      "message": "Este é um site de demonstração. Não existe comunicação real e nenhuma mensagem será enviada. Os dados inseridos não serão armazenados."
+    }
+  },
+  "footer": {
+    "description": "O seu parceiro de confiança na compra do carro perfeito. Qualidade, transparência e satisfação garantida em cada negócio.",
+    "quickLinks": "Links Rápidos",
+    "home": "Início",
+    "stock": "Stock de Carros",
+    "services": "Serviços",
+    "about": "Sobre Nós",
+    "testimonials": "Testemunhos",
+    "followUs": "Siga-nos",
+    "instagram": "Instagram",
+    "facebook": "Facebook",
+    "twitter": "Twitter",
+    "linkedin": "LinkedIn",
+    "rights": "Todos os direitos reservados.",
+    "developedBy": "Desenvolvido com ❤️ por",
+    "webazul": "WebAzul",
+    "privacyPolicy": "Política de Privacidade",
+    "termsService": "Termos de Serviço",
+    "cookies": "Política de Cookies",
+    "backToTop": "Topo"
+  }
+}
