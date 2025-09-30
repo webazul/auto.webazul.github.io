@@ -226,7 +226,6 @@ export default function Dashboard() {
       if (response.ok) {
         const data = await response.json()
         setBrands(data.brands || [])
-        console.log('✅ Marcas carregadas:', data.brands?.length || 0)
       } else {
         console.error('❌ Erro ao carregar brands.json:', response.status)
       }
@@ -281,7 +280,6 @@ export default function Dashboard() {
   // Carregar TODOS os dados uma única vez quando entra no dashboard
   useEffect(() => {
     if (currentStore?.id) {
-      console.log('🚀 Carregamento inicial do dashboard - buscando todos os dados...')
 
       // Carregar apenas produtos ativos inicialmente (status padrão)
       loadProductsByStatus('active')
@@ -351,7 +349,6 @@ export default function Dashboard() {
   // Carregar produtos do status quando muda (com cache inteligente)
   useEffect(() => {
     if (currentStore?.id && statusFilter) {
-      console.log('🔄 Status mudou para:', statusFilter)
       setCurrentPage(1) // Reset para página 1
       loadProductsByStatus(statusFilter)
     }
@@ -360,11 +357,29 @@ export default function Dashboard() {
   // Filtrar quando muda o termo de busca
   useEffect(() => {
     if (allProducts.length > 0) {
-      console.log('🔍 Termo de busca mudou, aplicando filtros...', searchTerm)
       setCurrentPage(1) // Reset para página 1
       applyJSFilters(allProducts, searchTerm, statusFilter)
     }
   }, [searchTerm])
+
+  // Bloquear scroll do body quando qualquer modal estiver aberto
+  useEffect(() => {
+    const hasModalOpen = showLogoutModal || showDeleteConfirmModal || showSoldConfirmModal ||
+                         showAddCarModal || showManageModal || showCropModal ||
+                         showAddClienteModal || showManageClienteModal || showDeleteClienteModal
+
+    if (hasModalOpen) {
+      document.body.classList.add('modal-open')
+    } else {
+      document.body.classList.remove('modal-open')
+    }
+
+    // Cleanup ao desmontar componente
+    return () => {
+      document.body.classList.remove('modal-open')
+    }
+  }, [showLogoutModal, showDeleteConfirmModal, showSoldConfirmModal, showAddCarModal,
+      showManageModal, showCropModal, showAddClienteModal, showManageClienteModal, showDeleteClienteModal])
 
   // Scroll para topo do modal ao mudar de step
   useEffect(() => {
@@ -397,18 +412,14 @@ export default function Dashboard() {
   // Função para carregar produtos de um status específico e adicionar ao cache
   const loadProductsByStatus = async (status) => {
     if (!currentStore?.id) {
-      console.log('⚠️ loadProductsByStatus: currentStore?.id não encontrado')
       return
     }
 
     // Se já carregou esse status, não recarregar
     if (loadedStatuses.has(status)) {
-      console.log(`🎯 Status "${status}" já carregado, aplicando filtros...`)
       applyJSFilters(allProducts, searchTerm, status)
       return
     }
-
-    console.log(`📦 Carregando produtos com status: ${status}`)
     setLoading(true)
 
     try {
@@ -431,7 +442,6 @@ export default function Dashboard() {
         ...doc.data()
       }))
 
-      console.log(`✅ ${statusProducts.length} produtos carregados para status "${status}"`)
 
       // Adicionar ao cache existente (remove produtos do mesmo status que já existam)
       setAllProducts(prevProducts => {
@@ -466,12 +476,8 @@ export default function Dashboard() {
   // Função para carregar TODOS os produtos (todos os status) uma única vez
   const loadAllProducts = async () => {
     if (!currentStore?.id) {
-      console.log('⚠️ loadAllProducts: currentStore?.id não encontrado')
       return
     }
-
-    console.log('📦 Carregando TODOS os produtos de todos os status...')
-    console.log('🏪 Store ID:', currentStore.id)
     setLoading(true)
 
     try {
@@ -480,7 +486,6 @@ export default function Dashboard() {
       let allProductsData = []
 
       for (const status of statusesToLoad) {
-        console.log(`🔍 Carregando produtos com status: ${status}`)
 
         const productsRef = collection(db, 'products')
         let constraints = [
@@ -504,7 +509,6 @@ export default function Dashboard() {
           ...doc.data()
         }))
 
-        console.log(`✅ ${statusProducts.length} produtos com status "${status}"`)
         allProductsData = [...allProductsData, ...statusProducts]
       }
 
@@ -515,7 +519,6 @@ export default function Dashboard() {
         return bTime - aTime // Desc order
       })
 
-      console.log(`✅ Total carregado: ${allProductsData.length} produtos`)
 
       setAllProducts(allProductsData)
 
@@ -535,7 +538,6 @@ export default function Dashboard() {
 
     setLoading(true)
     try {
-      console.log(`📖 Buscando TODOS os produtos com status: "${status}"`)
 
       const productsRef = collection(db, 'products')
 
@@ -560,7 +562,6 @@ export default function Dashboard() {
         ...doc.data()
       }))
 
-      console.log(`✅ ${allProductsData.length} produtos carregados do Firestore`)
 
       // Armazenar TODOS os produtos do status atual
       setAllProducts(allProductsData)
@@ -581,14 +582,10 @@ export default function Dashboard() {
 
   // Função para aplicar filtros JavaScript (status + busca + paginação)
   const applyJSFilters = (products = allProducts, search = searchTerm, status = statusFilter) => {
-    console.log(`🔍 Aplicando filtros JS - Status: "${status}", Busca: "${search}"`)
-
     // 1. Filtrar por status primeiro
     let filtered = products.filter(product => {
       return product.status === status
     })
-
-    console.log(`📊 ${filtered.length} produtos com status "${status}"`)
 
     // 2. Filtrar por busca (name + model)
     if (search.trim()) {
@@ -600,8 +597,6 @@ export default function Dashboard() {
       })
     }
 
-    console.log(`📊 ${filtered.length} produtos após filtros de status e busca`)
-
     setFilteredProducts(filtered)
 
     // 2. Aplicar paginação
@@ -610,8 +605,6 @@ export default function Dashboard() {
     const paginated = filtered.slice(startIndex, endIndex)
 
     setPaginatedProducts(paginated)
-
-    console.log(`📄 Página ${currentPage}: ${paginated.length} produtos (${startIndex}-${endIndex})`)
   }
 
   // Novas funções de paginação JavaScript
@@ -637,24 +630,16 @@ export default function Dashboard() {
 
   // Aplicar filtros de clientes
   useEffect(() => {
-    console.log('🔄 Aplicando filtros aos clientes:')
-    console.log('📝 Total de clientes:', allClientes.length)
-    console.log('🔍 Filtro tipo:', typeFilter)
-    console.log('📊 Filtro status:', clientesStatusFilter)
-    console.log('🔎 Termo de busca:', clientesSearchTerm)
-
     let filtered = [...allClientes]
 
     // Filtro por tipo
     if (typeFilter !== 'all') {
       filtered = filtered.filter(cliente => cliente.type === typeFilter)
-      console.log('📝 Após filtro tipo:', filtered.length)
     }
 
     // Filtro por status
     if (clientesStatusFilter !== 'all') {
       filtered = filtered.filter(cliente => cliente.status === clientesStatusFilter)
-      console.log('📊 Após filtro status:', filtered.length)
     }
 
     // Filtro por busca
@@ -665,10 +650,8 @@ export default function Dashboard() {
         cliente.email?.toLowerCase().includes(search) ||
         cliente.phone?.includes(search)
       )
-      console.log('🔎 Após filtro busca:', filtered.length)
     }
 
-    console.log('✅ Clientes filtrados final:', filtered.length)
     setFilteredClientes(filtered)
     setClientesCurrentPage(1)
   }, [allClientes, typeFilter, clientesStatusFilter, clientesSearchTerm])
@@ -727,7 +710,6 @@ export default function Dashboard() {
   const stats = calculateDashboardStats()
 
   const handleManageProduct = (product) => {
-    console.log('🔧 Abrindo modal de gerenciamento para:', product.name || product.nome)
     setSelectedProduct(product)
     setIsEditMode(false) // Sempre inicia no modo visualização
     setShowManageModal(true)
@@ -740,7 +722,6 @@ export default function Dashboard() {
   }
 
   const handleEditProduct = () => {
-    console.log('✏️ Entrando em modo de edição')
     setIsEditMode(true)
     // Preencher formulário com dados do produto selecionado (compatibilidade com campos antigos e novos)
     setCarForm({
@@ -781,7 +762,6 @@ export default function Dashboard() {
   // Confirmar exclusão
   const confirmDeleteProduct = async () => {
     try {
-      console.log('🗑️ Excluindo produto:', selectedProduct.name || selectedProduct.nome)
 
       const productRef = doc(db, 'products', selectedProduct.id)
       await updateDoc(productRef, {
@@ -789,7 +769,6 @@ export default function Dashboard() {
         active: false // Exclusão lógica
       })
 
-      console.log('✅ Produto marcado como excluído')
       setShowDeleteConfirmModal(false)
       handleCloseManageModal()
 
@@ -804,14 +783,12 @@ export default function Dashboard() {
   // Confirmar marcar como vendido
   const confirmMarkAsSold = async () => {
     try {
-      console.log('💰 Marcando como vendido:', selectedProduct.name || selectedProduct.nome)
 
       const productRef = doc(db, 'products', selectedProduct.id)
       await updateDoc(productRef, {
         status: 'sold'
       })
 
-      console.log('✅ Produto marcado como vendido')
       setShowSoldConfirmModal(false)
       handleCloseManageModal()
 
@@ -829,7 +806,6 @@ export default function Dashboard() {
 
     setClientesLoading(true)
     try {
-      console.log('🔄 Carregando clientes para storeId:', currentStore.id)
 
       const q = query(
         collection(db, 'clients'),
@@ -851,12 +827,7 @@ export default function Dashboard() {
         }
       })
 
-      console.log('🔍 Dados brutos do Firestore:', snapshot.size, 'documentos')
-      console.log('📊 Clientes após filtrar deletados:', clientesData.length)
-      console.log('📝 Clientes carregados:', clientesData)
-
       setAllClientes(clientesData)
-      console.log(`✅ ${clientesData.length} clientes carregados`)
     } catch (error) {
       console.error('❌ Erro ao carregar clientes:', error)
     } finally {
@@ -900,7 +871,6 @@ export default function Dashboard() {
 
       await addDoc(collection(db, 'clients'), clienteData)
 
-      console.log('✅ Cliente adicionado com sucesso')
       setShowAddClienteModal(false)
       resetClienteForm()
       loadClientes()
@@ -925,7 +895,6 @@ export default function Dashboard() {
         updatedAt: serverTimestamp()
       })
 
-      console.log('✅ Cliente atualizado com sucesso')
       setShowManageClienteModal(false)
       setIsClienteEditMode(false)
       resetClienteForm()
@@ -950,7 +919,6 @@ export default function Dashboard() {
         deletedAt: serverTimestamp()
       })
 
-      console.log('✅ Cliente excluído com sucesso')
       setShowDeleteClienteModal(false)
       setShowManageClienteModal(false)
       loadClientes()
@@ -990,7 +958,6 @@ export default function Dashboard() {
     ]
 
     try {
-      console.log('🔄 Gerando dados de teste de clientes...')
 
       for (const client of testClients) {
         const clientData = {
@@ -1004,7 +971,6 @@ export default function Dashboard() {
         await addDoc(collection(db, 'clients'), clientData)
       }
 
-      console.log('✅ Dados de teste de clientes gerados com sucesso!')
       loadClientes()
       alert('Dados de teste de clientes gerados com sucesso!')
 
@@ -1086,7 +1052,6 @@ export default function Dashboard() {
   }
 
   const handleCarFormChange = (field, value) => {
-    console.log('📝 Alteração no form:', { field, value });
     setCarForm(prev => ({
       ...prev,
       [field]: value
@@ -1094,10 +1059,8 @@ export default function Dashboard() {
   }
 
   const handleProfilePhotoChange = (e) => {
-    console.log('🔥 handleProfilePhotoChange CHAMADO!', e.target.files)
     const file = e.target.files[0]
     if (file) {
-      console.log('✅ Arquivo selecionado:', file.name, file.type, file.size)
 
       // Validar arquivo
       const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
@@ -1113,12 +1076,10 @@ export default function Dashboard() {
         return
       }
 
-      console.log('🎯 Ativando modo crop inline...')
       // Ativar modo crop inline no Step 3
       setSelectedImageFile(file)
       setIsCroppingPhoto(true)
     } else {
-      console.log('❌ Nenhum arquivo selecionado')
     }
   }
 
@@ -1189,15 +1150,6 @@ export default function Dashboard() {
 
   const validateStep1 = () => {
     const isValid = Boolean(carForm.name && carForm.brand && carForm.model && carForm.year)
-
-    console.log('🔍 Validação Step 1:', {
-      name: carForm.name,
-      brand: carForm.brand,
-      model: carForm.model,
-      year: carForm.year,
-      isValid
-    })
-
     return isValid
   }
 
@@ -1228,22 +1180,13 @@ export default function Dashboard() {
   // Função para fazer upload de uma imagem
   const uploadImage = async (file, path) => {
     if (!file) {
-      console.log('❌ Nenhum arquivo para upload')
       return null
     }
 
-    console.log('📤 Iniciando upload:', { file, path, size: file.size, type: file.type })
-
     try {
       const imageRef = ref(storage, path)
-      console.log('📍 Referência criada:', imageRef.fullPath)
-
       const snapshot = await uploadBytes(imageRef, file)
-      console.log('✅ Upload concluído:', snapshot.metadata.name)
-
       const downloadURL = await getDownloadURL(snapshot.ref)
-      console.log('🔗 URL obtida:', downloadURL)
-
       return downloadURL
     } catch (error) {
       console.error('❌ Erro no upload:', error)
@@ -1287,14 +1230,10 @@ export default function Dashboard() {
 
       // Upload da foto de perfil
       let profilePhotoURL = null
-      console.log('🔍 Verificando foto de perfil:', carForm.profilePhoto)
       if (carForm.profilePhoto && carForm.profilePhoto.file) {
         setSubmitStatus('Enviando foto de perfil...')
-        console.log('📸 Fazendo upload da foto de perfil...')
         const profileImageId = crypto.randomUUID()
         profilePhotoURL = await uploadImage(carForm.profilePhoto.file, `${basePath}/profile_${profileImageId}`)
-      } else {
-        console.log('⚠️ Nenhuma foto de perfil para upload')
       }
 
       // Upload das fotos da galeria
@@ -1350,7 +1289,6 @@ export default function Dashboard() {
       await updateDoc(docRef, productData)
 
       setSubmitStatus('Finalizando...')
-      console.log('✅ Carro adicionado com sucesso:', carId)
 
       setShowAddCarModal(false)
       resetCarForm()
@@ -1383,7 +1321,6 @@ export default function Dashboard() {
     ]
 
     try {
-      console.log('🔄 Gerando dados de teste...')
 
       for (const car of testCars) {
         // Adicionar alguns carros promocionais para teste
@@ -1422,7 +1359,6 @@ export default function Dashboard() {
         await addDoc(collection(db, 'products'), productData)
       }
 
-      console.log('✅ Dados de teste gerados com sucesso!')
 
       // Recarregar produtos
       loadProducts(statusFilter)
@@ -1691,7 +1627,7 @@ export default function Dashboard() {
                   <FaPlus />
                   <span>Adicionar Carro</span>
                 </button>
-                {/* <button
+                <button
                   className="add-btn"
                   style={{ background: '#f59e0b', borderColor: '#f59e0b' }}
                   onClick={generateTestData}
@@ -1699,7 +1635,7 @@ export default function Dashboard() {
                 >
                   🧪
                   <span>Dados Teste</span>
-                </button> */}
+                </button>
               </div>
             </div>
 
@@ -1833,21 +1769,26 @@ export default function Dashboard() {
 
                       <div className="product-bottom">
                         <div className="product-specs">
-                          <div className="spec-item">
-                            <FaCalendarAlt className="spec-icon" />
-                            <span>{product.year || product.ano}</span>
-                          </div>
-                          <div className="spec-item">
-                            <FaRoad className="spec-icon" />
-                            <span>{(product.mileage || product.km)?.toLocaleString() || '0'} km</span>
-                          </div>
-                          {product.createdAt && (
+                          {(product.year || product.ano) && (
                             <div className="spec-item">
-                              <FaClock className="spec-icon" />
-                              <span>{new Date(product.createdAt.seconds * 1000).toLocaleDateString('pt-BR')}</span>
+                              <FaCalendarAlt className="spec-icon" />
+                              <span>{product.year || product.ano}</span>
                             </div>
                           )}
-                          {(product.fuel || product.combustivel) && (
+                          {(() => {
+                            const mileage = product.mileage ?? product.km
+                            const hasValidMileage = mileage !== undefined &&
+                                                    mileage !== null &&
+                                                    mileage !== '' &&
+                                                    (typeof mileage === 'number' || (typeof mileage === 'string' && mileage.trim() !== ''))
+                            return hasValidMileage && (
+                              <div className="spec-item">
+                                <FaRoad className="spec-icon" />
+                                <span>{mileage.toLocaleString()} km</span>
+                              </div>
+                            )
+                          })()}
+                          {((product.fuel && product.fuel.trim()) || (product.combustivel && product.combustivel.trim())) && (
                             <div className="spec-item">
                               <FaGasPump className="spec-icon" />
                               <span>{product.fuel || product.combustivel}</span>
@@ -3146,8 +3087,6 @@ export default function Dashboard() {
                     type="button"
                     className={`modal-btn confirm-btn ${currentStep === 1 && !validateStep1() ? 'disabled' : ''}`}
                     onClick={(e) => {
-                      console.log('🔘 Clicou no botão Próximo');
-                      console.log('📝 Estado atual do form:', carForm);
                       handleNextStep(e);
                     }}
                     disabled={currentStep === 1 && !validateStep1()}
@@ -3229,18 +3168,31 @@ export default function Dashboard() {
 
                     <div className="summary-section">
                       <h5>Detalhes</h5>
-                      <div className="summary-item">
-                        <span className="label">Cor:</span>
-                        <span className="value">{selectedProduct.cor}</span>
-                      </div>
-                      <div className="summary-item">
-                        <span className="label">Combustível:</span>
-                        <span className="value">{selectedProduct.combustivel}</span>
-                      </div>
-                      <div className="summary-item">
-                        <span className="label">Quilometragem:</span>
-                        <span className="value">{(selectedProduct.mileage || selectedProduct.km)?.toLocaleString()} km</span>
-                      </div>
+                      {((selectedProduct.color && selectedProduct.color.trim()) || (selectedProduct.cor && selectedProduct.cor.trim())) && (
+                        <div className="summary-item">
+                          <span className="label">Cor:</span>
+                          <span className="value">{selectedProduct.color || selectedProduct.cor}</span>
+                        </div>
+                      )}
+                      {((selectedProduct.fuel && selectedProduct.fuel.trim()) || (selectedProduct.combustivel && selectedProduct.combustivel.trim())) && (
+                        <div className="summary-item">
+                          <span className="label">Combustível:</span>
+                          <span className="value">{selectedProduct.fuel || selectedProduct.combustivel}</span>
+                        </div>
+                      )}
+                      {(() => {
+                        const mileage = selectedProduct.mileage ?? selectedProduct.km
+                        const hasValidMileage = mileage !== undefined &&
+                                                mileage !== null &&
+                                                mileage !== '' &&
+                                                (typeof mileage === 'number' || (typeof mileage === 'string' && mileage.trim() !== ''))
+                        return hasValidMileage && (
+                          <div className="summary-item">
+                            <span className="label">Quilometragem:</span>
+                            <span className="value">{mileage.toLocaleString()} km</span>
+                          </div>
+                        )
+                      })()}
                       <div className="summary-item">
                         <span className="label">Status:</span>
                         <span className={`status-badge ${
@@ -3301,10 +3253,10 @@ export default function Dashboard() {
                     </div>
                   )}
 
-                  {selectedProduct.descricao && (
+                  {((selectedProduct.description && selectedProduct.description.trim()) || (selectedProduct.descricao && selectedProduct.descricao.trim())) && (
                     <div className="summary-section full-width">
                       <h5>Descrição</h5>
-                      <p className="description-text">{selectedProduct.descricao}</p>
+                      <p className="description-text">{selectedProduct.description || selectedProduct.descricao}</p>
                     </div>
                   )}
                 </div>
@@ -3322,7 +3274,7 @@ export default function Dashboard() {
                   </button>
                   <button
                     className="manage-btn primary"
-                    onClick={() => console.log('Salvar alterações')}
+                    onClick={() => {}}
                   >
                     Salvar Alterações
                   </button>

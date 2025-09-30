@@ -450,38 +450,99 @@
 
 /* Car Info */
 .car-info {
-  padding: var(--home-space-xl);
+  padding: var(--home-space-md) var(--home-space-lg);
 }
 
 .car-title {
-  font-size: var(--home-text-xl);
+  font-size: var(--home-text-lg);
   font-weight: var(--home-font-bold);
   color: var(--home-gray-900);
-  margin-bottom: var(--home-space-lg);
+  margin-bottom: var(--home-space-xs);
   line-height: 1.2;
+  transition: color 0.3s ease;
+}
+
+.car-title.promotional-title {
+  color: #16a34a;
+  background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.car-subtitle {
+  display: block;
+  font-size: var(--home-text-sm);
+  color: var(--home-gray-500);
+  font-weight: var(--home-font-medium);
+  margin-bottom: var(--home-space-md);
 }
 
 .car-specs {
+  display: none; /* Tags agora estão no footer inline */
+}
+
+/* Car Footer */
+.car-footer {
   display: flex;
-  gap: var(--home-space-lg);
-  margin-bottom: var(--home-space-lg);
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--home-space-md);
+  padding-top: var(--home-space-sm);
+  border-top: 1px solid var(--home-gray-200);
+}
+
+/* Specs Inline */
+.car-specs-inline {
+  display: flex;
+  gap: 6px;
   flex-wrap: wrap;
+  align-items: center;
 }
 
-.car-specs span {
-  font-size: var(--home-text-sm);
-  color: var(--home-gray-500);
+.spec-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
   background: var(--home-gray-100);
-  padding: var(--home-space-xs) var(--home-space-md);
   border-radius: var(--home-radius-pill);
-  font-weight: var(--home-font-medium);
+  font-size: 11px;
+  font-weight: var(--home-font-semibold);
+  color: var(--home-gray-600);
+  white-space: nowrap;
 }
 
+/* Car Price */
 .car-price {
-  font-size: var(--home-text-2xl);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.price-original {
+  font-size: var(--home-text-sm);
+  font-weight: var(--home-font-medium);
+  color: var(--home-gray-400);
+  text-decoration: line-through;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.price-promotional {
+  font-size: var(--home-text-xl);
+  font-weight: var(--home-font-extrabold);
+  color: #16a34a;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.price-regular {
+  font-size: var(--home-text-xl);
   font-weight: var(--home-font-extrabold);
   color: var(--home-primary);
-  text-align: right;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 /* View All Cars Button */
@@ -527,15 +588,41 @@
   }
 
   .car-info {
-    padding: 1rem;
+    padding: 0.75rem 1rem;
   }
 
   .car-title {
-    font-size: 1.1rem;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .car-subtitle {
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .car-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
   }
 
   .car-price {
-    font-size: 1.25rem;
+    align-self: flex-end;
+  }
+
+  .spec-tag {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+
+  .price-regular,
+  .price-promotional {
+    font-size: 1.125rem;
+  }
+
+  .price-original {
+    font-size: 0.8rem;
   }
 
   .view-all-btn {

@@ -7,7 +7,8 @@ import {
   FaPaperPlane,
   FaMapMarkerAlt,
   FaClock,
-  FaCheckCircle
+  FaCheckCircle,
+  FaInfoCircle
 } from 'react-icons/fa'
 import './ContactSection.css'
 
@@ -51,23 +52,16 @@ export default function ContactSection() {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Simular envio do formulário
+    // Exibir mensagem de demonstração
     setTimeout(() => {
-      setSubmitStatus('success')
+      setSubmitStatus('demo')
       setIsSubmitting(false)
-      setFormData({
-        nome: '',
-        email: '',
-        telefone: '',
-        assunto: '',
-        mensagem: ''
-      })
 
-      // Reset status after 3 seconds
+      // Reset status after 5 seconds
       setTimeout(() => {
         setSubmitStatus('')
-      }, 3000)
-    }, 1500)
+      }, 5000)
+    }, 800)
   }
 
   const contactInfo = [
@@ -145,10 +139,13 @@ export default function ContactSection() {
           <div className="contact-form-column">
             <div className="contact-form-container">
 
-            {submitStatus === 'success' && (
-              <div className="success-message">
-                <FaCheckCircle />
-                <span>Mensagem enviada com sucesso! Entraremos em contato em breve.</span>
+            {submitStatus === 'demo' && (
+              <div className="demo-message">
+                <FaInfoCircle />
+                <div className="demo-message-content">
+                  <strong>Site de Demonstração</strong>
+                  <span>Este é um site de demonstração. Não existe comunicação real e nenhuma mensagem será enviada. Os dados inseridos não serão armazenados.</span>
+                </div>
               </div>
             )}
 

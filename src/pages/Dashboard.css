@@ -1,3 +1,8 @@
+/* Bloquear scroll do body quando modal está aberto */
+body.modal-open {
+  overflow: hidden;
+}
+
 /* Dashboard Layout - Modern Admin */
 .dashboard-layout {
   display: flex;
@@ -798,8 +803,8 @@
 }
 
 .product-thumbnail {
-  width: 120px;
-  height: 68px;
+  width: 160px;
+  height: 90px;
   border-radius: var(--admin-radius-md);
   object-fit: cover;
   border: 2px solid var(--admin-gray-200);
@@ -807,8 +812,8 @@
 }
 
 .product-thumbnail-placeholder {
-  width: 120px;
-  height: 68px;
+  width: 160px;
+  height: 90px;
   border-radius: var(--admin-radius-md);
   border: 2px solid var(--admin-gray-200);
   box-shadow: var(--admin-shadow-sm);
@@ -819,7 +824,7 @@
 }
 
 .placeholder-icon {
-  font-size: var(--admin-text-2xl) !important;
+  font-size: var(--admin-text-3xl) !important;
   color: var(--admin-gray-400) !important;
   background: none !important;
   border: none !important;
@@ -857,19 +862,19 @@
 .product-header {
   display: flex;
   align-items: flex-start;
-  gap: var(--admin-space-lg);
-  margin-bottom: var(--admin-space-lg);
+  gap: var(--admin-space-md);
+  margin-bottom: var(--admin-space-md);
 }
 
 .product-title-area {
   display: flex;
   flex-direction: column;
-  gap: var(--admin-space-xs);
+  gap: 2px;
   flex: 1;
 }
 
 .product-name {
-  font-size: var(--admin-text-lg);
+  font-size: var(--admin-text-base);
   font-weight: var(--admin-font-semibold);
   color: var(--admin-gray-900);
   margin: 0;
@@ -877,7 +882,7 @@
 }
 
 .product-model {
-  font-size: var(--admin-text-sm);
+  font-size: var(--admin-text-xs);
   color: var(--admin-gray-500);
   font-weight: var(--admin-font-medium);
   flex-shrink: 0;
@@ -1341,6 +1346,7 @@
   justify-content: center;
   z-index: var(--admin-z-modal);
   padding: var(--admin-space-lg);
+  overflow-y: auto; /* Permite scroll no overlay */
 }
 
 .modal-content {
@@ -1350,7 +1356,7 @@
   width: 100%;
   max-width: 400px;
   max-height: 90vh;
-  overflow: hidden;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
 }
@@ -1658,6 +1664,7 @@
 .modal-wizard {
   max-width: 600px;
   width: 100%;
+  /* Remove restrições de altura/overflow - deixar conteúdo fluir */
 }
 
 /* Wizard Steps Indicator */
@@ -1754,8 +1761,8 @@
 
 /* Wizard Body */
 .wizard-body {
-  max-height: 60vh;
-  overflow-y: auto;
+  /* Remove restrições - deixar o modal inteiro ter scroll */
+  padding-bottom: var(--admin-space-md);
 }
 
 /* Wizard Footer */
@@ -2067,16 +2074,15 @@
 .manage-modal {
   max-width: 700px;
   width: 100%;
+  max-height: 90vh;
   background: white;
   border-radius: 12px;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .manage-modal-body {
   padding: 1.5rem;
-  max-height: 70vh;
-  overflow-y: auto;
   background: white;
 }
 
@@ -2829,16 +2835,12 @@
 .modal-cliente {
   max-width: 600px;
   width: 100%;
-  max-height: 90vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  /* Remove restrições de altura/overflow - deixar conteúdo fluir */
 }
 
 .modal-cliente .modal-body {
-  overflow-y: auto;
-  flex: 1;
-  max-height: calc(90vh - 120px); /* Desconta header e footer */
+  /* Remove overflow - deixar o modal inteiro ter scroll */
+  padding-bottom: var(--admin-space-md);
 }
 
 /* Form Row */

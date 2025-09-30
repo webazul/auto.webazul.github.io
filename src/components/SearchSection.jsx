@@ -12,9 +12,12 @@ import {
   FaChevronLeft,
   FaChevronRight
 } from 'react-icons/fa'
+import { useAuth } from '../contexts/AuthContext'
+import { formatCurrency } from '../utils/currency'
 import './SearchSection.css'
 
 export default function SearchSection({ cars = [], availableBrands = [], loading = false }) {
+  const { currentStore } = useAuth()
   const [filters, setFilters] = useState({
     status: 'venda',
     marca: '',
@@ -221,16 +224,7 @@ export default function SearchSection({ cars = [], availableBrands = [], loading
               onClick={() => {
                 // Small delay to ensure DOM is updated after filter changes
                 setTimeout(() => {
-                  // Try multiple selectors to find results section
-                  let resultsSection = document.querySelector('.cars-results')
-
-                  // Fallback: try to find the results within the same component
-                  if (!resultsSection) {
-                    const searchContainer = document.querySelector('.search-container')
-                    if (searchContainer) {
-                      resultsSection = searchContainer.querySelector('.cars-results')
-                    }
-                  }
+                  const resultsSection = document.querySelector('.cars-results')
 
                   if (resultsSection) {
                     // Get header height dynamically
@@ -238,17 +232,13 @@ export default function SearchSection({ cars = [], availableBrands = [], loading
                     const headerHeight = header ? header.offsetHeight : 80
                     const additionalOffset = 20 // Buffer for better visibility
 
-                    // Use offsetTop for more reliable positioning
-                    const elementPosition = resultsSection.offsetTop - headerHeight - additionalOffset
-
-                    console.log('Scrolling to results section at position:', elementPosition)
+                    // Calculate position: offsetTop minus header height to account for fixed header
+                    const elementPosition = resultsSection.getBoundingClientRect().top + window.pageYOffset - headerHeight - additionalOffset
 
                     window.scrollTo({
-                      top: Math.max(0, elementPosition), // Ensure we don't scroll to negative position
+                      top: elementPosition,
                       behavior: 'smooth'
                     })
-                  } else {
-                    console.log('Results section not found')
                   }
                 }, 100)
               }}
@@ -290,18 +280,67 @@ export default function SearchSection({ cars = [], availableBrands = [], loading
                     </div>
 
                     <div className="car-info">
-                      <h3 className="car-title">
-                        {(car.brand || car.marca)} {(car.model || car.modelo)}
+                      <h3 className={`car-title ${car.isPromotional && car.originalPrice ? 'promotional-title' : ''}`}>
+                        {car.name || car.nome}
                       </h3>
+                      <span className="car-subtitle">{car.brand || car.marca} {car.model || car.modelo}</span>
 
-                      <div className="car-specs">
-                        <span className="car-year">{car.year || car.ano}</span>
-                        <span className="car-mileage">{(car.mileage || car.km)?.toLocaleString()} km</span>
-                        <span className="car-fuel">{car.fuel || car.combustivel}</span>
-                      </div>
+                      <div className="car-footer">
+                        {/* Tags */}
+                        <div className="car-specs-inline">
+                          {(car.year || car.ano) && (
+                            <span className="spec-tag">
+                              {car.year || car.ano}
+                            </span>
+                          )}
+                          {(() => {
+                            const mileage = car.mileage ?? car.km
+                            const hasValidMileage = mileage !== undefined &&
+                                                    mileage !== null &&
+                                                    mileage !== '' &&
+                                                    (typeof mileage === 'number' || (typeof mileage === 'string' && mileage.trim() !== ''))
+                            return hasValidMileage && (
+                              <span className="spec-tag">
+                                {mileage.toLocaleString()} km
+                              </span>
+                            )
+                          })()}
+                          {((car.fuel && car.fuel.trim()) || (car.combustivel && car.combustivel.trim())) && (
+                            <span className="spec-tag">
+                              {car.fuel || car.combustivel}
+                            </span>
+                          )}
+                        </div>
 
-                      <div className="car-price">
-                        €{(car.price || car.preco)?.toLocaleString()}
+                        {/* Preço */}
+                        <div className="car-price">
+                          {car.isPromotional && car.originalPrice ? (
+                            <>
+                              <span className="price-original">
+                                {formatCurrency(
+                                  car.originalPrice,
+                                  currentStore?.currency || 'EUR',
+                                  currentStore?.country || 'PT'
+                                )}
+                              </span>
+                              <span className="price-promotional">
+                                {formatCurrency(
+                                  car.price || car.preco,
+                                  currentStore?.currency || 'EUR',
+                                  currentStore?.country || 'PT'
+                                )}
+                              </span>
+                            </>
+                          ) : (
+                            <span className="price-regular">
+                              {formatCurrency(
+                                car.price || car.preco,
+                                currentStore?.currency || 'EUR',
+                                currentStore?.country || 'PT'
+                              )}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>

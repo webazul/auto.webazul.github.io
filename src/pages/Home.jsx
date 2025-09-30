@@ -10,6 +10,7 @@ import TrustSection from '../components/TrustSection'
 import TestimonialsSection from '../components/TestimonialsSection'
 import ContactSection from '../components/ContactSection'
 import Footer from '../components/Footer'
+import DemoModal from '../components/DemoModal'
 import '../styles/home-design-system.css'
 import './Home.css'
 
@@ -25,7 +26,6 @@ export default function Home() {
 
       try {
         setLoading(true)
-        console.log('Buscando carros ativos para loja:', currentStore.id)
 
         const productsRef = collection(db, 'products')
         const q = query(
@@ -47,9 +47,6 @@ export default function Home() {
         const brands = [...new Set(carsData.map(car => car.brand || car.marca).filter(Boolean))]
         setAvailableBrands(brands.sort())
 
-        console.log('Carros carregados:', carsData.length)
-        console.log('Marcas disponíveis:', brands)
-
       } catch (error) {
         console.error('Erro ao buscar carros:', error)
       } finally {
@@ -62,6 +59,7 @@ export default function Home() {
 
   return (
     <div className="home-page">
+      <DemoModal />
       <Header />
       <main>
         <HeroSection />

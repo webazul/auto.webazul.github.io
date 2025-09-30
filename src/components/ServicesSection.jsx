@@ -114,7 +114,17 @@ export default function ServicesSection() {
               <div className="service-action">
                 <button
                   className="service-btn"
-                  onClick={() => navigate('/cars')}
+                  onClick={() => {
+                    const contactSection = document.getElementById('contact')
+                    if (contactSection) {
+                      const headerHeight = 80
+                      const elementPosition = contactSection.offsetTop - headerHeight
+                      window.scrollTo({
+                        top: elementPosition,
+                        behavior: 'smooth'
+                      })
+                    }
+                  }}
                 >
                   <span>Saber Mais</span>
                   <FaArrowRight />
