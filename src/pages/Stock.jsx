@@ -133,16 +133,6 @@ export default function Stock() {
               </div>
               <h1>Explore Nosso Stock de Veículos</h1>
               <p>Encontre o carro perfeito para si com nossa seleção completa de veículos de qualidade</p>
-              <div className="stock-stats">
-                <div className="stat-item">
-                  <span className="stat-number">{filteredCars.length}</span>
-                  <span className="stat-label">Veículos Disponíveis</span>
-                </div>
-                <div className="stat-item">
-                  <span className="stat-number">{availableBrands.length}</span>
-                  <span className="stat-label">Marcas</span>
-                </div>
-              </div>
             </div>
           </div>
         </section>
@@ -242,16 +232,6 @@ export default function Stock() {
                     value={filters.kmMax}
                     onChange={(e) => handleFilterChange('kmMax', e.target.value)}
                   />
-                </div>
-              </div>
-
-              <div className="filters-actions">
-                <button className="reset-btn" onClick={handleResetFilters}>
-                  Limpar Filtros
-                </button>
-                <div className="results-count">
-                  <FaCar />
-                  <span>{filteredCars.length} veículos encontrados</span>
                 </div>
               </div>
             </div>

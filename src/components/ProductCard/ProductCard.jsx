@@ -30,38 +30,38 @@ export default function ProductCard({ product, onManage, formatCurrency }) {
   const mileage = product.mileage ?? product.km
 
   return (
-    <div className="table-row">
-      <div className="product-header">
-        <div className="product-photo">
+    <div className="product-card-row">
+      <div className="product-card-header">
+        <div className="product-card-photo">
           {product.profilePhoto ? (
             <img
               src={product.profilePhoto}
               alt={product.name || product.nome}
-              className="product-thumbnail"
+              className="product-card-thumbnail"
             />
           ) : (
-            <div className="product-thumbnail-placeholder">
-              <FaCar className="placeholder-icon" />
+            <div className="product-card-thumbnail-placeholder">
+              <FaCar className="product-card-placeholder-icon" />
             </div>
           )}
         </div>
-        <div className="product-header-center">
-          <div className="product-title-area">
-            <h3 className="product-name">{product.name || product.nome}</h3>
-            <span className="product-model">{product.brand || product.marca} {product.model || product.modelo}</span>
+        <div className="product-card-header-center">
+          <div className="product-card-title-area">
+            <h3 className="product-card-name">{product.name || product.nome}</h3>
+            <span className="product-card-model">{product.brand || product.marca} {product.model || product.modelo}</span>
           </div>
           {status === 'sold' && product.soldTo?.clientName && (
-            <span className="buyer-badge">
-              <FaUser className="buyer-icon" />
+            <span className="product-card-buyer-badge">
+              <FaUser className="product-card-buyer-icon" />
               {product.soldTo.clientName}
             </span>
           )}
         </div>
-        <div className="product-badges">
-          <span className={`product-status-badge ${status}`}>
+        <div className="product-card-badges">
+          <span className={`product-card-status-badge ${status}`}>
             {getStatusLabel(status)}
           </span>
-          <div className="product-price">
+          <div className="product-card-price">
             {status === 'sold' && product.soldTo?.salePrice ? (
               <span className="sold-price">{formatCurrency(product.soldTo.salePrice)}</span>
             ) : product.isPromotional && product.originalPrice ? (
@@ -76,30 +76,30 @@ export default function ProductCard({ product, onManage, formatCurrency }) {
         </div>
       </div>
 
-      <div className="product-bottom">
-        <div className="product-specs">
+      <div className="product-card-bottom">
+        <div className="product-card-specs">
           {(product.year || product.ano) && (
-            <div className="spec-item">
-              <FaCalendarAlt className="spec-icon" />
+            <div className="product-card-spec-item">
+              <FaCalendarAlt className="product-card-spec-icon" />
               <span>{product.year || product.ano}</span>
             </div>
           )}
           {hasValidMileage() && (
-            <div className="spec-item">
-              <FaRoad className="spec-icon" />
+            <div className="product-card-spec-item">
+              <FaRoad className="product-card-spec-icon" />
               <span>{mileage.toLocaleString()} km</span>
             </div>
           )}
           {((product.fuel && product.fuel.trim()) || (product.combustivel && product.combustivel.trim())) && (
-            <div className="spec-item">
-              <FaGasPump className="spec-icon" />
+            <div className="product-card-spec-item">
+              <FaGasPump className="product-card-spec-icon" />
               <span>{product.fuel || product.combustivel}</span>
             </div>
           )}
         </div>
-        <div className="product-actions">
+        <div className="product-card-actions">
           <button
-            className="action-btn manage-btn"
+            className="product-card-action-btn manage-btn"
             title="Gerenciar"
             onClick={() => onManage(product)}
           >

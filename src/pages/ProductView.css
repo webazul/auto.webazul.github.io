@@ -402,26 +402,30 @@
   background: var(--home-white);
 }
 
+.product-specs .home-container {
+  max-width: 100%;
+  padding: 0 var(--home-space-5xl);
+}
+
 .specs-title {
   font-size: var(--home-text-4xl);
   font-weight: var(--home-font-extrabold);
   color: var(--home-gray-900);
-  text-align: center;
   margin-bottom: var(--home-space-4xl);
   letter-spacing: -0.02em;
 }
 
 .specs-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: var(--home-space-xl);
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--home-space-md);
 }
 
 .spec-card {
   display: flex;
   align-items: center;
   gap: var(--home-space-lg);
-  padding: var(--home-space-xl);
+  padding: var(--home-space-2xl);
   background: var(--home-white);
   border: 1px solid var(--home-gray-200);
   border-radius: var(--home-radius-lg);
@@ -435,15 +439,15 @@
 }
 
 .spec-icon {
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   border-radius: var(--home-radius-md);
   background: linear-gradient(135deg, var(--home-primary) 0%, var(--home-primary-hover) 100%);
   color: var(--home-white);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--home-icon-lg);
+  font-size: var(--home-icon-xl);
   flex-shrink: 0;
   box-shadow: var(--home-shadow-primary);
 }
@@ -461,12 +465,9 @@
 }
 
 .spec-value {
-  font-size: var(--home-text-lg);
+  font-size: var(--home-text-xl);
   font-weight: var(--home-font-bold);
   color: var(--home-gray-900);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 /* ============================================ */
@@ -645,6 +646,10 @@
   .gallery-main {
     height: 400px;
   }
+
+  .specs-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 768px) {
@@ -665,7 +670,7 @@
   }
 
   .specs-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .specs-title,
@@ -713,6 +718,10 @@
   .description-title,
   .cta-card h2 {
     font-size: var(--home-text-2xl);
+  }
+
+  .specs-grid {
+    grid-template-columns: 1fr;
   }
 
   .description-content {

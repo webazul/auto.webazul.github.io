@@ -165,6 +165,9 @@
   cursor: pointer;
   transition: all var(--home-transition);
   box-shadow: var(--home-shadow-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .demo-modal-button:hover {

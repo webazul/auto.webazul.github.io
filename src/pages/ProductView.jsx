@@ -30,7 +30,7 @@ import './ProductView.css'
 export default function ProductView() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { currentStore, products, productsLoading } = useAuth()
+  const { currentStore, products, productsLoading, fetchProducts } = useAuth()
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -45,10 +45,25 @@ export default function ProductView() {
         return
       }
 
-      // Aguardar até que os produtos sejam carregados do contexto
+      // Se não há loja ainda, aguardar
+      if (!currentStore?.id) {
+        console.log('⏳ Aguardando identificação da loja...')
+        setLoading(true)
+        return
+      }
+
+      // Se está carregando produtos, aguardar
       if (productsLoading) {
         console.log('⏳ Aguardando carregamento dos produtos do contexto...')
         setLoading(true)
+        return
+      }
+
+      // Se não há produtos no cache, buscar
+      if (products.length === 0) {
+        console.log('🔍 Cache vazio, buscando produtos...')
+        setLoading(true)
+        await fetchProducts()
         return
       }
 
@@ -95,7 +110,7 @@ export default function ProductView() {
     }
 
     fetchProduct()
-  }, [id, currentStore, products, productsLoading])
+  }, [id, currentStore, products, productsLoading, fetchProducts])
 
   const formatCurrency = (value) => {
     if (!value) return 'Consultar'
