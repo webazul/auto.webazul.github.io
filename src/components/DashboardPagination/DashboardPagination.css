@@ -1,0 +1,80 @@
+/* ============================================ */
+/* DASHBOARD PAGINATION COMPONENT              */
+/* ============================================ */
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--admin-space-3xl) 0;
+}
+
+.pagination-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--admin-space-md);
+  padding: var(--admin-space-lg) var(--admin-space-2xl);
+  background: var(--admin-gradient-primary);
+  color: var(--admin-white);
+  border: none;
+  border-radius: var(--admin-radius-md);
+  font-size: var(--admin-text-sm);
+  font-weight: var(--admin-font-bold);
+  cursor: pointer;
+  transition: var(--admin-transition-all);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  box-shadow: var(--admin-shadow-primary);
+}
+
+.pagination-btn:hover:not(.disabled) {
+  background: linear-gradient(135deg, var(--admin-primary-hover) 0%, var(--admin-primary-active) 100%);
+  transform: translateY(-2px);
+  box-shadow: var(--admin-shadow-primary-lg);
+}
+
+.pagination-btn.disabled {
+  background: var(--admin-gray-100);
+  color: var(--admin-gray-400);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.pagination-info {
+  display: flex;
+  align-items: center;
+  gap: var(--admin-space-md);
+  padding: var(--admin-space-lg) var(--admin-space-2xl);
+  background: var(--admin-white);
+  border: 2px solid var(--admin-gray-200);
+  border-radius: var(--admin-radius-md);
+  font-size: var(--admin-text-sm);
+  font-weight: var(--admin-font-semibold);
+  color: var(--admin-gray-700);
+}
+
+.pagination-info svg {
+  color: var(--admin-primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .pagination {
+    padding: var(--admin-space-2xl) 0;
+  }
+
+  .pagination-btn {
+    padding: var(--admin-space-md) var(--admin-space-lg);
+    font-size: var(--admin-text-xs);
+  }
+
+  .pagination-btn span {
+    display: none;
+  }
+
+  .pagination-info {
+    padding: var(--admin-space-md) var(--admin-space-lg);
+    font-size: var(--admin-text-xs);
+  }
+}

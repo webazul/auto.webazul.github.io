@@ -1,0 +1,20 @@
+/* ============================================ */
+/* SOLD PRODUCT CONFIRMATION MODAL             */
+/* ============================================ */
+
+.sold-confirm-modal .info-text {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.sold-confirm-modal .modal-btn.sold-btn {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+}
+
+.sold-confirm-modal .modal-btn.sold-btn:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-1px);
+}

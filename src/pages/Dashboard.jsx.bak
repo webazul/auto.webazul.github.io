@@ -1,0 +1,1464 @@
+import { useState, useEffect, useRef } from 'react'
+import { signOut } from 'firebase/auth'
+import { auth, db, storage } from '../firebase/config'
+import { useAuth } from '../contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
+import { collection, query, where, getDocs, orderBy, limit, startAfter, addDoc, serverTimestamp, doc, updateDoc } from 'firebase/firestore'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import ManageProductModal from '../components/ManageProductModal'
+import CreateProductModal from '../components/CreateProductModal'
+import SoldProductConfirmModal from '../components/SoldProductConfirmModal'
+import LogoutConfirmModal from '../components/LogoutConfirmModal'
+import ProductCard from '../components/ProductCard'
+import CreateClienteModal from '../components/CreateClienteModal'
+import ManageClienteModal from '../components/ManageClienteModal'
+import DashboardSidebar from '../components/DashboardSidebar'
+import DeleteConfirmModal from '../components/DeleteConfirmModal'
+import ClienteCard from '../components/ClienteCard'
+import DashboardOverview from '../components/DashboardOverview'
+import DashboardSettings from '../components/DashboardSettings'
+import DashboardPagination from '../components/DashboardPagination'
+import DashboardCarsView from '../components/DashboardCarsView'
+import DashboardClientesView from '../components/DashboardClientesView'
+import {
+  FaCar,
+  FaHome,
+  FaCog,
+  FaUsers,
+  FaSignOutAlt,
+  FaBars,
+  FaTimes,
+  FaUser,
+  FaShieldAlt,
+  FaChevronLeft,
+  FaChevronRight,
+  FaPlus,
+  FaEdit,
+  FaTrash,
+  FaCheck,
+  FaEye,
+  FaCamera,
+  FaImages,
+  FaSearch,
+  FaFilter,
+  FaPhone,
+  FaEnvelope,
+  FaCheckCircle,
+  FaTimesCircle,
+  FaUserCheck,
+  FaStickyNote,
+  FaCalendarAlt,
+  FaRoad,
+  FaGasPump,
+  FaClock,
+  FaMoneyBillWave,
+  FaChartLine,
+  FaWarehouse,
+  FaStore,
+  FaGlobe,
+  FaCoins,
+  FaLink,
+  FaUserCircle,
+  FaHistory,
+  FaFileDownload,
+  FaUpload,
+  FaFilePdf,
+  FaFileAlt,
+  FaFileImage,
+  FaDownload,
+  FaInfoCircle
+} from 'react-icons/fa'
+import '../styles/admin-design-system.css'
+import './Dashboard.css'
+import SearchableSelect from '../components/SearchableSelect'
+import CurrencyInput from 'react-currency-input-field'
+import ImageCropModal from '../components/ImageCropModal'
+import InlineCrop from '../components/InlineCrop'
+
+// Componente auxiliar para validação de preços
+const PriceValidationMessage = ({ isPromotional, originalPrice, price, formatCurrency }) => {
+  if (!isPromotional || !originalPrice || !price) return null
+
+  const original = parseFloat(originalPrice.replace(/[^\d,]/g, '').replace(',', '.')) || 0
+  const promotional = parseFloat(price.replace(/[^\d,]/g, '').replace(',', '.')) || 0
+  const isValidPromo = promotional < original && promotional > 0 && original > 0
+
+  return (
+    <div className="price-comparison">
+      {isValidPromo ? (
+        <div className="savings-info valid">
+          <span className="savings-label">✅ Promoção válida:</span>
+          <span className="savings-amount">
+            Economia de {formatCurrency(original - promotional)}
+          </span>
+        </div>
+      ) : promotional >= original && promotional > 0 && original > 0 ? (
+        <div className="savings-info invalid">
+          <span className="savings-label">❌ Erro:</span>
+          <span className="error-message">
+            O preço promocional deve ser menor que o preço original
+          </span>
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
+export default function Dashboard() {
+  const { currentUser, currentStore } = useAuth()
+  const navigate = useNavigate()
+  const [activeMenu, setActiveMenu] = useState('dashboard')
+
+  // Função utilitária para formatação de moeda baseada na loja
+  const formatCurrency = (value, options = {}) => {
+    if (!value && value !== 0) return '-'
+
+    const currency = currentStore?.currency || 'EUR'
+    const country = currentStore?.country || 'PT'
+
+    // Mapear país para locale
+    const localeMap = {
+      'PT': 'pt-PT',
+      'ES': 'es-ES',
+      'FR': 'fr-FR',
+      'IT': 'it-IT',
+      'DE': 'de-DE',
+      'GB': 'en-GB',
+      'US': 'en-US',
+      'BR': 'pt-BR'
+    }
+
+    const locale = localeMap[country] || 'pt-PT'
+
+    try {
+      return new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: currency,
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+        ...options
+      }).format(Number(value))
+    } catch (error) {
+      // Fallback para formato básico
+      const symbols = {
+        'EUR': '€',
+        'USD': '$',
+        'GBP': '£',
+        'BRL': 'R$'
+      }
+      return `${symbols[currency] || '€'}${Number(value).toLocaleString()}`
+    }
+  }
+
+  // Função para obter configuração do CurrencyInput
+  const getCurrencyInputConfig = () => {
+    const currency = currentStore?.currency || 'EUR'
+    const country = currentStore?.country || 'PT'
+
+    const localeMap = {
+      'PT': 'pt-PT',
+      'ES': 'es-ES',
+      'FR': 'fr-FR',
+      'IT': 'it-IT',
+      'DE': 'de-DE',
+      'GB': 'en-GB',
+      'US': 'en-US',
+      'BR': 'pt-BR'
+    }
+
+    return {
+      locale: localeMap[country] || 'pt-PT',
+      currency: currency
+    }
+  }
+
+  // Função para obter símbolo da moeda
+  const getCurrencySymbol = () => {
+    const currency = currentStore?.currency || 'EUR'
+    const symbols = {
+      'EUR': '€',
+      'USD': '$',
+      'GBP': '£',
+      'BRL': 'R$'
+    }
+    return symbols[currency] || '€'
+  }
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [showLogoutModal, setShowLogoutModal] = useState(false)
+  const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false)
+  const [showSoldConfirmModal, setShowSoldConfirmModal] = useState(false)
+  const [showAddCarModal, setShowAddCarModal] = useState(false)
+  const [showManageModal, setShowManageModal] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState(null)
+  const [isEditMode, setIsEditMode] = useState(false)
+
+  // States para Interessados
+  const [showAddInterestedModal, setShowAddInterestedModal] = useState(false)
+  const [interestedType, setInterestedType] = useState('existing') // 'existing' ou 'new'
+  const [newInterestedData, setNewInterestedData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    status: 'interested',
+    notes: ''
+  })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState('')
+  const [storeSettings, setStoreSettings] = useState({
+    country: '',
+    currency: '',
+    language: ''
+  })
+
+  // Estados para página de carros - APENAS dados brutos
+  const [allProducts, setAllProducts] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [totalProducts, setTotalProducts] = useState(0)
+
+  // Estados para crop de imagem (ImageCropModal - usado em ManageProductModal)
+  const [showCropModal, setShowCropModal] = useState(false)
+  const [selectedImageFile, setSelectedImageFile] = useState(null)
+
+  // Estados para página de clientes - APENAS dados brutos
+  const [allClientes, setAllClientes] = useState([])
+  const [clientesLoading, setClientesLoading] = useState(false)
+
+  // Estados dos modais de clientes
+  const [showAddClienteModal, setShowAddClienteModal] = useState(false)
+  const [showManageClienteModal, setShowManageClienteModal] = useState(false)
+  const [showDeleteClienteModal, setShowDeleteClienteModal] = useState(false)
+  const [selectedCliente, setSelectedCliente] = useState(null)
+  const [isClienteEditMode, setIsClienteEditMode] = useState(false)
+  const [isClienteSubmitting, setIsClienteSubmitting] = useState(false)
+
+  // Form do cliente
+  const [clienteForm, setClienteForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    type: 'contact',
+    status: 'active',
+    notes: '',
+    contactDate: new Date().toISOString().split('T')[0]
+  })
+
+  // Carregar TODOS os dados quando entra no dashboard
+  useEffect(() => {
+    if (currentStore?.id) {
+      // Carregar todos os produtos
+      loadAllProducts()
+
+      // Carregar todos os clientes
+      loadClientes()
+
+      // Carregar totais
+      loadTotalProducts()
+    }
+  }, [currentStore])
+
+  // Inicializar configurações da loja
+  useEffect(() => {
+    if (currentStore) {
+      setStoreSettings({
+        country: currentStore.country || 'PT',
+        currency: currentStore.currency || 'EUR',
+        language: currentStore.language || 'pt'
+      })
+    }
+  }, [currentStore])
+
+  // Função para alterar configurações localmente
+  const handleSettingsChange = (field, value) => {
+    setStoreSettings(prev => ({
+      ...prev,
+      [field]: value
+    }))
+  }
+
+  // Função para salvar configurações no Firestore
+  const handleSaveSettings = async () => {
+    if (!currentStore?.id) return
+
+    setIsSubmitting(true)
+    setSubmitStatus('')
+
+    try {
+      const storeRef = doc(db, 'stores', currentStore.id)
+      await updateDoc(storeRef, {
+        country: storeSettings.country,
+        currency: storeSettings.currency,
+        language: storeSettings.language,
+        updatedAt: serverTimestamp()
+      })
+
+      setSubmitStatus('✅ Configurações salvas com sucesso!')
+
+      // Limpar mensagem após 3 segundos
+      setTimeout(() => {
+        setSubmitStatus('')
+      }, 3000)
+
+    } catch (error) {
+      console.error('Erro ao salvar configurações:', error)
+      setSubmitStatus('❌ Erro ao salvar configurações. Tente novamente.')
+
+      setTimeout(() => {
+        setSubmitStatus('')
+      }, 5000)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  // Funções de crop de imagem (usadas pelo ManageProductModal)
+  const handleCropComplete = (croppedBlob) => {
+    const previewUrl = URL.createObjectURL(croppedBlob)
+
+    // Atualiza o produto selecionado com a nova foto
+    setSelectedProduct(prev => ({
+      ...prev,
+      profilePhoto: {
+        file: croppedBlob,
+        preview: previewUrl,
+        name: `cropped_${Date.now()}.jpg`
+      }
+    }))
+
+    setShowCropModal(false)
+    setSelectedImageFile(null)
+  }
+
+  const handleCropCancel = () => {
+    setShowCropModal(false)
+    setSelectedImageFile(null)
+  }
+
+  // Bloquear scroll do body quando qualquer modal estiver aberto
+  useEffect(() => {
+    const hasModalOpen = showLogoutModal || showDeleteConfirmModal || showSoldConfirmModal ||
+                         showAddCarModal || showManageModal || showCropModal ||
+                         showAddClienteModal || showManageClienteModal || showDeleteClienteModal
+
+    if (hasModalOpen) {
+      document.body.classList.add('modal-open')
+    } else {
+      document.body.classList.remove('modal-open')
+    }
+
+    // Cleanup ao desmontar componente
+    return () => {
+      document.body.classList.remove('modal-open')
+    }
+  }, [showLogoutModal, showDeleteConfirmModal, showSoldConfirmModal, showAddCarModal,
+      showManageModal, showCropModal, showAddClienteModal, showManageClienteModal, showDeleteClienteModal])
+
+  const loadTotalProducts = async () => {
+    if (!currentStore?.id) return
+
+    try {
+      const productsRef = collection(db, 'products')
+      const q = query(
+        productsRef,
+        where('storeId', '==', currentStore.id)
+      )
+      const querySnapshot = await getDocs(q)
+      setTotalProducts(querySnapshot.size)
+    } catch (error) {
+      console.error('Erro ao contar produtos:', error)
+    }
+  }
+
+  // Cache para produtos por status
+  const [loadedStatuses, setLoadedStatuses] = useState(new Set())
+
+  // Função para carregar produtos de um status específico e adicionar ao cache
+  const loadProductsByStatus = async (status) => {
+    if (!currentStore?.id) {
+      return
+    }
+
+    // Se já carregou esse status, não recarregar
+    if (loadedStatuses.has(status)) {
+      applyJSFilters(allProducts, searchTerm, status)
+      return
+    }
+    setLoading(true)
+
+    try {
+      const productsRef = collection(db, 'products')
+
+      let constraints = [
+        where('storeId', '==', currentStore.id)
+      ]
+
+      // Adicionar filtro de status baseado no campo 'status'
+      if (status && status !== 'all') {
+        constraints.push(where('status', '==', status))
+      }
+
+      const q = query(productsRef, ...constraints)
+      const querySnapshot = await getDocs(q)
+
+      const statusProducts = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }))
+
+
+      // Adicionar ao cache existente (remove produtos do mesmo status que já existam)
+      setAllProducts(prevProducts => {
+        // Remove produtos antigos do mesmo status
+        const filteredPrev = prevProducts.filter(p => {
+          return p.status !== status
+        })
+
+        // Adiciona novos produtos e ordena
+        const newAllProducts = [...filteredPrev, ...statusProducts]
+        newAllProducts.sort((a, b) => {
+          const aTime = a.createdAt?.seconds || 0
+          const bTime = b.createdAt?.seconds || 0
+          return bTime - aTime // Desc order
+        })
+
+        return newAllProducts
+      })
+
+      // Marcar como carregado
+      setLoadedStatuses(prev => new Set([...prev, status]))
+
+      // Os filtros serão aplicados automaticamente pelo useEffect quando allProducts mudar
+
+    } catch (error) {
+      console.error(`❌ Erro ao carregar produtos do status "${status}":`, error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Função para carregar TODOS os produtos (todos os status) uma única vez
+  const loadAllProducts = async () => {
+    if (!currentStore?.id) {
+      return
+    }
+    setLoading(true)
+
+    try {
+      // Usar 3 queries simples baseadas na função que funcionava
+      const statusesToLoad = ['active', 'sold', 'deleted']
+      let allProductsData = []
+
+      for (const status of statusesToLoad) {
+
+        const productsRef = collection(db, 'products')
+        let constraints = [
+          where('storeId', '==', currentStore.id)
+        ]
+
+        // Usar a mesma lógica da função original (sem orderBy para evitar índices)
+        if (status === 'active') {
+          constraints.push(where('ativo', '==', true))
+        } else if (status === 'sold') {
+          constraints.push(where('vendido', '==', true))
+        } else if (status === 'deleted') {
+          constraints.push(where('excluido', '==', true))
+        }
+
+        const q = query(productsRef, ...constraints)
+        const querySnapshot = await getDocs(q)
+
+        const statusProducts = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }))
+
+        allProductsData = [...allProductsData, ...statusProducts]
+      }
+
+      // Ordenar em JavaScript em vez de no Firestore
+      allProductsData.sort((a, b) => {
+        const aTime = a.createdAt?.seconds || 0
+        const bTime = b.createdAt?.seconds || 0
+        return bTime - aTime // Desc order
+      })
+
+
+      setAllProducts(allProductsData)
+
+    } catch (error) {
+      console.error('❌ Erro ao carregar produtos:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Nova abordagem: buscar TODOS os produtos por status e filtrar via JavaScript
+  const loadProducts = async (status = 'active') => {
+    if (!currentStore?.id) return
+
+    setLoading(true)
+    try {
+
+      const productsRef = collection(db, 'products')
+
+      // Query simples: apenas storeId + status + ordenação (sem searchTerms)
+      let constraints = [
+        where('storeId', '==', currentStore.id),
+        where('status', '==', status),
+        orderBy('createdAt', 'desc')
+      ]
+
+      // Para produtos excluídos, não filtrar por active
+      // Para outros status, filtrar apenas produtos ativos
+      if (status !== 'deleted') {
+        constraints.splice(-1, 0, where('active', '==', true)) // Inserir antes do orderBy
+      }
+
+      const q = query(productsRef, ...constraints)
+
+      const querySnapshot = await getDocs(q)
+      const allProductsData = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }))
+
+
+      // Armazenar TODOS os produtos do status atual
+      setAllProducts(allProductsData)
+      setTotalProducts(allProductsData.length)
+
+      // Aplicar filtros JavaScript iniciais
+      applyJSFilters(allProductsData, searchTerm)
+
+    } catch (error) {
+      console.error('Erro ao carregar produtos:', error)
+      setAllProducts([])
+      setFilteredProducts([])
+      setPaginatedProducts([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Função para aplicar filtros JavaScript (status + busca + paginação)
+  const applyJSFilters = (products = allProducts, search = searchTerm, status = statusFilter) => {
+    // 1. Filtrar por status primeiro
+    let filtered = products.filter(product => {
+      return product.status === status
+    })
+
+    // 2. Filtrar por busca (name + model)
+    if (search.trim()) {
+      const searchLower = search.toLowerCase()
+      filtered = filtered.filter(product => {
+        const nameMatch = (product.name || product.nome || '').toLowerCase().includes(searchLower)
+        const modelMatch = (product.model || product.modelo || '').toLowerCase().includes(searchLower)
+        return nameMatch || modelMatch
+      })
+    }
+
+    setFilteredProducts(filtered)
+
+    // 2. Aplicar paginação
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
+    const endIndex = startIndex + ITEMS_PER_PAGE
+    const paginated = filtered.slice(startIndex, endIndex)
+
+    setPaginatedProducts(paginated)
+  }
+
+  // Novas funções de paginação JavaScript
+  const handleNextPage = () => {
+    const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE)
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1)
+    }
+  }
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1)
+    }
+  }
+
+  // Funções para calcular estatísticas do dashboard
+  const calculateDashboardStats = () => {
+    const activeProducts = allProducts.filter(p => p.status === 'active')
+    const soldProducts = allProducts.filter(p => p.status === 'sold')
+    const totalClients = allClientes.length
+
+    // Calcular valor total do inventário ativo
+    const totalInventoryValue = activeProducts.reduce((sum, product) => {
+      return sum + (parseFloat(product.price) || 0)
+    }, 0)
+
+    // Calcular receita de vendas
+    const totalSalesRevenue = soldProducts.reduce((sum, product) => {
+      return sum + (parseFloat(product.price) || 0)
+    }, 0)
+
+    // Distribuição por marca
+    const brandDistribution = activeProducts.reduce((acc, product) => {
+      const brand = product.brand || 'Outros'
+      acc[brand] = (acc[brand] || 0) + 1
+      return acc
+    }, {})
+
+    // Vendas por mês (produtos vendidos)
+    const salesByMonth = soldProducts.reduce((acc, product) => {
+      if (product.createdAt) {
+        const date = new Date(product.createdAt.seconds * 1000)
+        const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
+        acc[monthKey] = (acc[monthKey] || 0) + 1
+      }
+      return acc
+    }, {})
+
+    return {
+      totalActiveProducts: activeProducts.length,
+      totalSoldProducts: soldProducts.length,
+      totalClients,
+      totalInventoryValue,
+      totalSalesRevenue,
+      brandDistribution,
+      salesByMonth
+    }
+  }
+
+  const stats = calculateDashboardStats()
+
+  const handleManageProduct = (product) => {
+    setSelectedProduct(product)
+    setIsEditMode(false) // Sempre inicia no modo visualização
+    setShowManageModal(true)
+  }
+
+  const handleCloseManageModal = () => {
+    setShowManageModal(false)
+    setSelectedProduct(null)
+    setIsEditMode(false)
+  }
+
+  const handleEditProduct = () => {
+    setIsEditMode(true)
+    // Preencher formulário com dados do produto selecionado (compatibilidade com campos antigos e novos)
+    setCarForm({
+      name: selectedProduct.name || selectedProduct.nome || '',
+      brand: selectedProduct.brand || selectedProduct.marca || '',
+      model: selectedProduct.model || selectedProduct.modelo || '',
+      year: selectedProduct.year || selectedProduct.ano || new Date().getFullYear(),
+      price: selectedProduct.price || selectedProduct.preco || '',
+      color: selectedProduct.color || selectedProduct.cor || '',
+      fuel: selectedProduct.fuel || selectedProduct.combustivel || '',
+      mileage: selectedProduct.mileage || selectedProduct.km || '',
+      description: selectedProduct.description || selectedProduct.descricao || '',
+      doors: selectedProduct.doors || selectedProduct.portas || '',
+      transmission: selectedProduct.transmission || selectedProduct.cambio || 'Manual',
+      condition: selectedProduct.condition || selectedProduct.estado || 'Used',
+      status: selectedProduct.status || (selectedProduct.vendido ? 'sold' : selectedProduct.excluido ? 'deleted' : 'active'),
+      active: selectedProduct.active !== undefined ? selectedProduct.active : selectedProduct.ativo !== undefined ? selectedProduct.ativo : true,
+      profilePhoto: null,
+      gallery: [],
+      stockNumber: selectedProduct.stockNumber || '',
+      registrationDate: selectedProduct.registrationDate || selectedProduct.dataMatricula || '',
+      monthlyTax: selectedProduct.monthlyTax || selectedProduct.iucMensal || '',
+      annualTax: selectedProduct.annualTax || selectedProduct.iucAnual || '',
+      stamp: selectedProduct.stamp || selectedProduct.selo || '',
+      moderatorFee: selectedProduct.moderatorFee || selectedProduct.taxaModeradora || ''
+    })
+  }
+
+  // Abrir modais de confirmação
+  const handleDeleteProduct = () => {
+    setShowDeleteConfirmModal(true)
+  }
+
+  const handleMarkAsSold = () => {
+    setShowSoldConfirmModal(true)
+  }
+
+  // Confirmar exclusão
+  const confirmDeleteProduct = async () => {
+    try {
+
+      const productRef = doc(db, 'products', selectedProduct.id)
+      await updateDoc(productRef, {
+        status: 'deleted',
+        active: false // Exclusão lógica
+      })
+
+      setShowDeleteConfirmModal(false)
+      handleCloseManageModal()
+
+      // Recarregar produtos
+      loadProducts(statusFilter)
+    } catch (error) {
+      console.error('Erro ao excluir produto:', error)
+      alert('Erro ao excluir produto. Tente novamente.')
+    }
+  }
+
+  // Confirmar marcar como vendido
+  const confirmMarkAsSold = async () => {
+    try {
+
+      const productRef = doc(db, 'products', selectedProduct.id)
+      await updateDoc(productRef, {
+        status: 'sold'
+      })
+
+      setShowSoldConfirmModal(false)
+      handleCloseManageModal()
+
+      // Recarregar produtos do status atual
+      loadProducts(statusFilter)
+    } catch (error) {
+      console.error('Erro ao marcar como vendido:', error)
+      alert('Erro ao marcar como vendido. Tente novamente.')
+    }
+  }
+
+  // === FUNÇÕES PARA GERENCIAR INTERESSADOS ===
+
+  // Adicionar interessado
+  const handleAddInterested = async () => {
+    try {
+      let clientData = {}
+
+      // Se for cliente existente
+      if (interestedType === 'existing' && selectedCliente) {
+        clientData = {
+          clientId: selectedCliente.id,
+          clientName: selectedCliente.nome,
+          clientEmail: selectedCliente.email || '',
+          clientPhone: selectedCliente.telefone || '',
+          status: newInterestedData.status,
+          notes: newInterestedData.notes,
+          createdAt: serverTimestamp()
+        }
+      }
+      // Se for novo cliente
+      else if (interestedType === 'new') {
+        // Primeiro criar o cliente na collection clients
+        const newClientRef = await addDoc(collection(db, 'clients'), {
+          nome: newInterestedData.name,
+          email: newInterestedData.email,
+          telefone: newInterestedData.phone,
+          storeId: currentStore.id,
+          createdAt: serverTimestamp()
+        })
+
+        clientData = {
+          clientId: newClientRef.id,
+          clientName: newInterestedData.name,
+          clientEmail: newInterestedData.email,
+          clientPhone: newInterestedData.phone,
+          status: newInterestedData.status,
+          notes: newInterestedData.notes,
+          createdAt: serverTimestamp()
+        }
+
+        // Recarregar lista de clientes
+        loadClientes()
+      }
+
+      // Adicionar ao array interested do produto
+      const currentInterested = selectedProduct.interested || []
+      const productRef = doc(db, 'products', selectedProduct.id)
+      await updateDoc(productRef, {
+        interested: [...currentInterested, clientData]
+      })
+
+      // Atualizar selectedProduct local
+      setSelectedProduct({
+        ...selectedProduct,
+        interested: [...currentInterested, clientData]
+      })
+
+      // Fechar modal e resetar
+      setShowAddInterestedModal(false)
+      setInterestedType('existing')
+      setSelectedCliente(null)
+      setNewInterestedData({
+        name: '',
+        email: '',
+        phone: '',
+        status: 'interested',
+        notes: ''
+      })
+
+      alert('Interessado adicionado com sucesso!')
+    } catch (error) {
+      console.error('Erro ao adicionar interessado:', error)
+      alert('Erro ao adicionar interessado. Tente novamente.')
+    }
+  }
+
+  // Atualizar status do interessado
+  const handleUpdateInterestedStatus = async (index, newStatus) => {
+    try {
+      const updatedInterested = [...selectedProduct.interested]
+      updatedInterested[index] = {
+        ...updatedInterested[index],
+        status: newStatus,
+        updatedAt: serverTimestamp()
+      }
+
+      const productRef = doc(db, 'products', selectedProduct.id)
+      await updateDoc(productRef, {
+        interested: updatedInterested
+      })
+
+      setSelectedProduct({
+        ...selectedProduct,
+        interested: updatedInterested
+      })
+
+      console.log('Status atualizado com sucesso')
+    } catch (error) {
+      console.error('Erro ao atualizar status:', error)
+      alert('Erro ao atualizar status. Tente novamente.')
+    }
+  }
+
+  // Remover interessado
+  const handleRemoveInterested = async (index) => {
+    if (!confirm('Tem certeza que deseja remover este interessado?')) return
+
+    try {
+      const updatedInterested = selectedProduct.interested.filter((_, i) => i !== index)
+
+      const productRef = doc(db, 'products', selectedProduct.id)
+      await updateDoc(productRef, {
+        interested: updatedInterested
+      })
+
+      setSelectedProduct({
+        ...selectedProduct,
+        interested: updatedInterested
+      })
+
+      alert('Interessado removido com sucesso!')
+    } catch (error) {
+      console.error('Erro ao remover interessado:', error)
+      alert('Erro ao remover interessado. Tente novamente.')
+    }
+  }
+
+  // Carregar clientes
+  const loadClientes = async () => {
+    if (!currentStore?.id) return
+
+    setClientesLoading(true)
+    try {
+
+      const q = query(
+        collection(db, 'clients'),
+        where('storeId', '==', currentStore.id),
+        orderBy('createdAt', 'desc')
+      )
+
+      const snapshot = await getDocs(q)
+      const clientesData = []
+
+      snapshot.forEach(doc => {
+        const data = doc.data()
+        // Filtrar apenas clientes não deletados
+        if (data.status !== 'deleted') {
+          clientesData.push({
+            id: doc.id,
+            ...data
+          })
+        }
+      })
+
+      setAllClientes(clientesData)
+    } catch (error) {
+      console.error('❌ Erro ao carregar clientes:', error)
+    } finally {
+      setClientesLoading(false)
+    }
+  }
+
+  // Funções do formulário de cliente
+  const handleClienteFormChange = (field, value) => {
+    setClienteForm(prev => ({
+      ...prev,
+      [field]: value
+    }))
+  }
+
+  const resetClienteForm = () => {
+    setClienteForm({
+      name: '',
+      email: '',
+      phone: '',
+      type: 'contact',
+      status: 'active',
+      notes: '',
+      contactDate: new Date().toISOString().split('T')[0]
+    })
+  }
+
+  // Adicionar cliente
+  const handleAddCliente = async (e) => {
+    e.preventDefault()
+    if (!currentStore?.id) return
+
+    setIsClienteSubmitting(true)
+    try {
+      const clienteData = {
+        ...clienteForm,
+        storeId: currentStore.id,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      }
+
+      await addDoc(collection(db, 'clients'), clienteData)
+
+      setShowAddClienteModal(false)
+      resetClienteForm()
+      loadClientes()
+    } catch (error) {
+      console.error('Erro ao adicionar cliente:', error)
+      alert('Erro ao adicionar cliente. Tente novamente.')
+    } finally {
+      setIsClienteSubmitting(false)
+    }
+  }
+
+  // Atualizar cliente
+  const handleUpdateCliente = async (e) => {
+    e.preventDefault()
+    if (!selectedCliente?.id) return
+
+    setIsClienteSubmitting(true)
+    try {
+      const clienteRef = doc(db, 'clients', selectedCliente.id)
+      await updateDoc(clienteRef, {
+        ...clienteForm,
+        updatedAt: serverTimestamp()
+      })
+
+      setShowManageClienteModal(false)
+      setIsClienteEditMode(false)
+      resetClienteForm()
+      loadClientes()
+    } catch (error) {
+      console.error('Erro ao atualizar cliente:', error)
+      alert('Erro ao atualizar cliente. Tente novamente.')
+    } finally {
+      setIsClienteSubmitting(false)
+    }
+  }
+
+  // Excluir cliente
+  const handleDeleteCliente = async () => {
+    if (!selectedCliente?.id) return
+
+    setIsClienteSubmitting(true)
+    try {
+      const clienteRef = doc(db, 'clients', selectedCliente.id)
+      await updateDoc(clienteRef, {
+        status: 'deleted',
+        deletedAt: serverTimestamp()
+      })
+
+      setShowDeleteClienteModal(false)
+      setShowManageClienteModal(false)
+      loadClientes()
+    } catch (error) {
+      console.error('Erro ao excluir cliente:', error)
+      alert('Erro ao excluir cliente. Tente novamente.')
+    } finally {
+      setIsClienteSubmitting(false)
+    }
+  }
+
+  // Abrir modal de gerenciamento
+  const handleManageCliente = (cliente) => {
+    setSelectedCliente(cliente)
+    setClienteForm({
+      name: cliente.name || '',
+      email: cliente.email || '',
+      phone: cliente.phone || '',
+      type: cliente.type || 'contact',
+      status: cliente.status || 'active',
+      notes: cliente.notes || '',
+      contactDate: cliente.contactDate || new Date().toISOString().split('T')[0]
+    })
+    setShowManageClienteModal(true)
+  }
+
+  // Função para gerar dados de teste de clientes
+  const generateTestClients = async () => {
+    if (!currentStore?.id) return
+
+    const testClients = [
+      { name: 'João Silva', email: 'joao.silva@email.com', phone: '(11) 99999-1111', type: 'contact', status: 'active', notes: 'Interessado em SUVs' },
+      { name: 'Maria Santos', email: 'maria.santos@email.com', phone: '(11) 99999-2222', type: 'buyer', status: 'converted', notes: 'Comprou BMW X5' },
+      { name: 'Pedro Costa', email: 'pedro.costa@email.com', phone: '(11) 99999-3333', type: 'testdrive', status: 'waiting', notes: 'Agendou test drive para terça-feira' },
+      { name: 'Ana Lima', email: 'ana.lima@email.com', phone: '(11) 99999-4444', type: 'lead', status: 'active', notes: 'Veio do site, interessada em carros econômicos' },
+      { name: 'Carlos Oliveira', email: 'carlos.oliveira@email.com', phone: '(11) 99999-5555', type: 'contact', status: 'lost', notes: 'Desistiu da compra' }
+    ]
+
+    try {
+
+      for (const client of testClients) {
+        const clientData = {
+          ...client,
+          contactDate: new Date().toISOString().split('T')[0],
+          storeId: currentStore.id,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        }
+
+        await addDoc(collection(db, 'clients'), clientData)
+      }
+
+      loadClientes()
+      alert('Dados de teste de clientes gerados com sucesso!')
+
+    } catch (error) {
+      console.error('Erro ao gerar dados de teste de clientes:', error)
+      alert('Erro ao gerar dados de teste de clientes.')
+    }
+  }
+
+  // Os produtos são gerenciados pelos novos estados JavaScript
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth)
+      navigate('/')
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error)
+    }
+  }
+
+  const confirmLogout = () => {
+    setShowLogoutModal(false)
+    handleLogout()
+  }
+
+  // Opções para os selects
+  // Opções para as marcas - geradas a partir do JSON carregado
+
+  // Função para gerar dados de teste
+  const generateTestData = async () => {
+    if (!currentStore?.id) return
+
+    const testCars = [
+      { name: 'BMW X5 Sport', brand: 'BMW', model: 'X5', year: 2023, price: 85000, color: 'Preto', fuel: 'Diesel' },
+      { name: 'Audi A4 Avant', brand: 'Audi', model: 'A4', year: 2022, price: 45000, color: 'Branco', fuel: 'Gasolina' },
+      { name: 'Mercedes C200', brand: 'Mercedes', model: 'C200', year: 2024, price: 55000, color: 'Cinza', fuel: 'Híbrido' },
+      { name: 'Volkswagen Golf GTI', brand: 'Volkswagen', model: 'Golf', year: 2021, price: 35000, color: 'Vermelho', fuel: 'Gasolina' },
+      { name: 'Toyota Corolla Hybrid', brand: 'Toyota', model: 'Corolla', year: 2023, price: 28000, color: 'Azul', fuel: 'Híbrido' },
+      { name: 'Ford Focus ST', brand: 'Ford', model: 'Focus', year: 2022, price: 32000, color: 'Verde', fuel: 'Gasolina' },
+      { name: 'Peugeot 308 SW', brand: 'Peugeot', model: '308', year: 2023, price: 26000, color: 'Branco', fuel: 'Diesel' },
+      { name: 'Renault Clio RS', brand: 'Renault', model: 'Clio', year: 2024, price: 22000, color: 'Amarelo', fuel: 'Gasolina' }
+    ]
+
+    try {
+
+      for (const car of testCars) {
+        // Adicionar alguns carros promocionais para teste
+        const isPromotional = Math.random() > 0.7 // 30% chance de ser promocional
+        const originalPrice = isPromotional ? car.price + Math.floor(Math.random() * 10000) + 5000 : null
+
+        const productData = {
+          name: car.name,
+          brand: car.brand,
+          model: car.model,
+          year: car.year,
+          price: car.price,
+          originalPrice: originalPrice,
+          isPromotional: isPromotional,
+          color: car.color,
+          fuel: car.fuel,
+          mileage: Math.floor(Math.random() * 50000), // KM random
+          description: `${car.name} em excelente estado de conservação. Viatura com todas as revisões em dia.`,
+          doors: Math.random() > 0.5 ? '4' : '5',
+          transmission: Math.random() > 0.3 ? 'Manual' : 'Automática',
+          condition: Math.random() > 0.2 ? 'Used' : 'New',
+          status: Math.random() > 0.8 ? 'sold' : 'active',
+          active: true,
+          profilePhoto: null,
+          gallery: [],
+          stockNumber: `TEST${Math.floor(Math.random() * 10000)}`,
+          registrationDate: '2020-01-01',
+          monthlyTax: Math.floor(Math.random() * 200) + 50,
+          annualTax: Math.floor(Math.random() * 500) + 200,
+          stamp: Math.floor(Math.random() * 100) + 20,
+          moderatorFee: Math.floor(Math.random() * 50) + 10,
+          storeId: currentStore.id,
+          createdAt: serverTimestamp()
+        }
+
+        await addDoc(collection(db, 'products'), productData)
+      }
+
+
+      // Recarregar produtos
+      loadProducts(statusFilter)
+      loadTotalProducts()
+
+      alert('Dados de teste gerados com sucesso!')
+
+    } catch (error) {
+      console.error('Erro ao gerar dados de teste:', error)
+      alert('Erro ao gerar dados de teste.')
+    }
+  }
+
+  // Função para exportar produtos para CSV
+  const exportToCSV = () => {
+    if (!allProducts || allProducts.length === 0) {
+      alert('Nenhum produto disponível para exportar.')
+      return
+    }
+
+    // Cabeçalhos do CSV
+    const headers = [
+      'Nome',
+      'Marca',
+      'Modelo',
+      'Versão',
+      'Ano',
+      'Preço',
+      'Preço_Original',
+      'Promocional',
+      'Quilómetros',
+      'Combustível',
+      'Potência_CV',
+      'Cilindrada',
+      'Transmissão',
+      'Cor',
+      'Portas',
+      'Lugares',
+      'Condição',
+      'Descrição',
+      'URL_Foto_Principal',
+      'URL_Foto_1',
+      'URL_Foto_2',
+      'URL_Foto_3',
+      'URL_Foto_4',
+      'Número_Stock',
+      'Data_Matrícula',
+      'Imposto_Mensal',
+      'Imposto_Anual',
+      'Selo',
+      'Taxa_Moderador',
+      'Status'
+    ]
+
+    // Converter produtos para linhas CSV
+    const rows = allProducts.map(product => {
+      // Extrair URLs das fotos da galeria
+      const galleryUrls = product.gallery || []
+      const foto1 = galleryUrls[0] || ''
+      const foto2 = galleryUrls[1] || ''
+      const foto3 = galleryUrls[2] || ''
+      const foto4 = galleryUrls[3] || ''
+
+      return [
+        product.name || '',
+        product.brand || '',
+        product.model || '',
+        product.version || '',
+        product.year || '',
+        product.price || '',
+        product.originalPrice || '',
+        product.isPromotional ? 'Sim' : 'Não',
+        product.mileage || '',
+        product.fuel || '',
+        product.power || '',
+        product.displacement || '',
+        product.transmission || '',
+        product.color || '',
+        product.doors || '',
+        product.seats || '',
+        product.condition || '',
+        product.description || '',
+        product.profilePhoto || '',
+        foto1,
+        foto2,
+        foto3,
+        foto4,
+        product.stockNumber || '',
+        product.registrationDate || '',
+        product.monthlyTax || '',
+        product.annualTax || '',
+        product.stamp || '',
+        product.moderatorFee || '',
+        product.status || ''
+      ]
+    })
+
+    // Escapar valores CSV (adicionar aspas se contiver vírgula ou quebra de linha)
+    const escapeCSV = (value) => {
+      if (value == null) return ''
+      const stringValue = String(value)
+      if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
+        return `"${stringValue.replace(/"/g, '""')}"`
+      }
+      return stringValue
+    }
+
+    // Criar conteúdo CSV
+    const csvContent = [
+      headers.map(escapeCSV).join(','),
+      ...rows.map(row => row.map(escapeCSV).join(','))
+    ].join('\n')
+
+    // Criar Blob e fazer download
+    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' }) // \ufeff = BOM para UTF-8
+    const link = document.createElement('a')
+    const url = URL.createObjectURL(blob)
+
+    // Nome do arquivo com data atual
+    const today = new Date().toISOString().split('T')[0]
+    const fileName = `webazul-cars-${today}.csv`
+
+    link.setAttribute('href', url)
+    link.setAttribute('download', fileName)
+    link.style.visibility = 'hidden'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
+  const menuItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: FaHome },
+    { id: 'cars', label: 'Carros', icon: FaCar },
+    { id: 'clientes', label: 'Clientes', icon: FaUsers },
+    { id: 'settings', label: 'Configurações', icon: FaCog }
+  ]
+
+  // Opções para os selects de clientes
+  const tipoOptions = [
+    { value: 'contact', label: 'Contato', color: '#93c5fd' },
+    { value: 'buyer', label: 'Comprador', color: '#86efac' },
+    { value: 'testdrive', label: 'Test drive', color: '#fde68a' },
+    { value: 'lead', label: 'Lead', color: '#c4b5fd' }
+  ]
+
+  const statusClienteOptions = [
+    { value: 'active', label: 'Ativo', color: '#86efac' },
+    { value: 'converted', label: 'Convertido', color: '#93c5fd' },
+    { value: 'lost', label: 'Perdido', color: '#fca5a5' },
+    { value: 'waiting', label: 'Aguardando', color: '#fde68a' }
+  ]
+
+  const renderContent = () => {
+    switch (activeMenu) {
+      case 'dashboard':
+        return (
+          <DashboardOverview
+            stats={stats}
+            currentUser={currentUser}
+            currentStore={currentStore}
+            formatCurrency={formatCurrency}
+          />
+        )
+      case 'cars':
+        return (
+          <DashboardCarsView
+            products={allProducts}
+            loading={loading}
+            onManageProduct={handleManageProduct}
+            onAddProduct={() => setShowAddCarModal(true)}
+            onExportCSV={exportToCSV}
+            onGenerateTestData={generateTestData}
+            formatCurrency={formatCurrency}
+          />
+        )
+      case 'clientes':
+        return (
+          <DashboardClientesView
+            clientes={allClientes}
+            loading={clientesLoading}
+            onManageCliente={handleManageCliente}
+            onAddCliente={() => {
+              setClienteForm({
+                name: '',
+                email: '',
+                phone: '',
+                type: 'contact',
+                status: 'active',
+                notes: '',
+                contactDate: new Date().toISOString().split('T')[0]
+              })
+              setShowAddClienteModal(true)
+            }}
+            tipoOptions={tipoOptions}
+            statusClienteOptions={statusClienteOptions}
+          />
+        )
+      case 'settings':
+        return (
+          <DashboardSettings
+            storeSettings={storeSettings}
+            onSettingsChange={handleSettingsChange}
+            onSaveSettings={handleSaveSettings}
+            isSubmitting={isSubmitting}
+            submitStatus={submitStatus}
+            currentStore={currentStore}
+          />
+        )
+      default:
+        return null
+    }
+  }
+
+  return (
+    <div className="dashboard-layout">
+      {/* Sidebar */}
+      <DashboardSidebar
+        isOpen={sidebarOpen}
+        isCollapsed={sidebarCollapsed}
+        onToggleOpen={() => setSidebarOpen(!sidebarOpen)}
+        onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+        onClose={() => setSidebarOpen(false)}
+        activeMenu={activeMenu}
+        onMenuChange={setActiveMenu}
+        menuItems={menuItems}
+        currentUser={currentUser}
+        currentStore={currentStore}
+        onLogout={() => setShowLogoutModal(true)}
+      />
+
+      {/* Main Content */}
+      <main className={`dashboard-main ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
+        <header className="dashboard-header">
+          <button
+            className="sidebar-toggle"
+            onClick={() => setSidebarOpen(true)}
+          >
+            <FaBars />
+          </button>
+
+          <h1 className="page-title">
+            {menuItems.find(item => item.id === activeMenu)?.label || 'Dashboard'}
+          </h1>
+
+          <div className="header-actions">
+          </div>
+        </header>
+
+        <div className="dashboard-body">
+          {renderContent()}
+        </div>
+      </main>
+
+      {/* Logout Modal */}
+      <LogoutConfirmModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={confirmLogout}
+      />
+
+      {/* Add Car Modal - Wizard Style */}
+      <CreateProductModal
+        isOpen={showAddCarModal}
+        onClose={() => setShowAddCarModal(false)}
+        onProductCreated={() => {
+          loadProducts(statusFilter)
+          loadTotalProducts()
+        }}
+        currentStore={currentStore}
+        formatCurrency={formatCurrency}
+      />
+
+      {/* Modal de Crop de Imagem */}
+      <ImageCropModal
+        isOpen={showCropModal}
+        onClose={() => {
+          setShowCropModal(false)
+          setSelectedImageFile(null)
+        }}
+        selectedFile={selectedImageFile}
+        onCropComplete={handleCropComplete}
+      />
+
+      {/* Modal de Gerenciamento de Produto */}
+      <ManageProductModal
+        isOpen={showManageModal}
+        onClose={handleCloseManageModal}
+        product={selectedProduct}
+        allClientes={allClientes}
+        currentStore={currentStore}
+        onUpdateInterestedStatus={handleUpdateInterestedStatus}
+        onRemoveInterested={handleRemoveInterested}
+        onAddInterested={handleAddInterested}
+        onDelete={handleDeleteProduct}
+        onMarkAsSold={handleMarkAsSold}
+        onEdit={handleEditProduct}
+        formatCurrency={formatCurrency}
+        showAddInterestedModal={showAddInterestedModal}
+        setShowAddInterestedModal={setShowAddInterestedModal}
+        interestedType={interestedType}
+        setInterestedType={setInterestedType}
+        selectedCliente={selectedCliente}
+        setSelectedCliente={setSelectedCliente}
+        newInterestedData={newInterestedData}
+        setNewInterestedData={setNewInterestedData}
+      />
+
+      {/* Modal de Confirmação - Excluir Produto */}
+      <DeleteConfirmModal
+        isOpen={showDeleteConfirmModal && !!selectedProduct}
+        onClose={() => setShowDeleteConfirmModal(false)}
+        onConfirm={confirmDeleteProduct}
+        itemName={selectedProduct?.name || selectedProduct?.nome || ''}
+        itemType="produto"
+      />
+
+      {/* Modal de Confirmação - Marcar como Vendido */}
+      <SoldProductConfirmModal
+        isOpen={showSoldConfirmModal && !!selectedProduct}
+        onClose={() => setShowSoldConfirmModal(false)}
+        onConfirm={confirmMarkAsSold}
+        productName={selectedProduct?.name || selectedProduct?.nome || ''}
+      />
+
+      {/* Modal Adicionar Cliente */}
+      <CreateClienteModal
+        isOpen={showAddClienteModal}
+        onClose={() => setShowAddClienteModal(false)}
+        onSubmit={handleAddCliente}
+        clienteForm={clienteForm}
+        onFormChange={handleClienteFormChange}
+        isSubmitting={isClienteSubmitting}
+        tipoOptions={tipoOptions}
+        statusClienteOptions={statusClienteOptions}
+      />
+
+      {/* Modal Gerenciar Cliente */}
+      <ManageClienteModal
+        isOpen={showManageClienteModal}
+        onClose={() => setShowManageClienteModal(false)}
+        cliente={selectedCliente}
+        isEditMode={isClienteEditMode}
+        setIsEditMode={setIsClienteEditMode}
+        onUpdate={handleUpdateCliente}
+        onDelete={() => setShowDeleteClienteModal(true)}
+        clienteForm={clienteForm}
+        onFormChange={handleClienteFormChange}
+        isSubmitting={isClienteSubmitting}
+        tipoOptions={tipoOptions}
+        statusClienteOptions={statusClienteOptions}
+      />
+
+      {/* Modal Confirmar Exclusão Cliente */}
+      <DeleteConfirmModal
+        isOpen={showDeleteClienteModal}
+        onClose={() => setShowDeleteClienteModal(false)}
+        onConfirm={handleDeleteCliente}
+        itemName={selectedCliente?.name}
+        itemType="cliente"
+        isSubmitting={isClienteSubmitting}
+      />
+    </div>
+  )
+}

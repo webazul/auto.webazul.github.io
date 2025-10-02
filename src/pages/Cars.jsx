@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { collection, query, where, getDocs, orderBy, limit, startAfter } from 'firebase/firestore'
 import { db } from '../firebase/config'
 import { useAuth } from '../contexts/AuthContext'
@@ -6,6 +7,7 @@ import { FaChevronLeft, FaChevronRight, FaCar } from 'react-icons/fa'
 
 export default function Cars() {
   const { currentStore } = useAuth()
+  const navigate = useNavigate()
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
@@ -192,13 +194,27 @@ export default function Cars() {
             marginTop: '1rem'
           }}>
           {products.map(product => (
-            <div key={product.id} style={{
-              backgroundColor: 'white',
-              padding: '1.5rem',
-              borderRadius: '10px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-              border: '1px solid #eee'
-            }}>
+            <div
+              key={product.id}
+              onClick={() => navigate(`/v/${product.id}`)}
+              style={{
+                backgroundColor: 'white',
+                padding: '1.5rem',
+                borderRadius: '10px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                border: '1px solid #eee',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-4px)'
+                e.currentTarget.style.boxShadow = '0 8px 16px rgba(0,0,0,0.15)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)'
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)'
+              }}
+            >
               <h3 style={{
                 margin: '0 0 1rem 0',
                 color: '#333',

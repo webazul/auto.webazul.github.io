@@ -1,0 +1,327 @@
+/* ============================================ */
+/* MANAGE CLIENTE MODAL                        */
+/* ============================================ */
+
+/* Form styles (shared with AddClienteModal) */
+.modal-cliente .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.modal-cliente .form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.modal-cliente .form-group input,
+.modal-cliente .form-group select,
+.modal-cliente .form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.modal-cliente .form-group input:focus,
+.modal-cliente .form-group select:focus,
+.modal-cliente .form-group textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.modal-cliente .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.modal-cliente .form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.modal-cliente textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* View Mode Styles */
+.cliente-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.view-section {
+  background: #f9fafb;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.view-section h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+}
+
+.view-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.view-item:last-child {
+  border-bottom: none;
+}
+
+.view-item .label {
+  font-weight: 600;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.view-item .value {
+  color: #1f2937;
+  font-size: 0.875rem;
+  text-align: right;
+}
+
+.tipo-badge,
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.observacoes-text {
+  margin: 0;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  color: #374151;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.view-section.full-width {
+  grid-column: 1 / -1;
+}
+
+/* ============================================ */
+/* TABS NAVIGATION                             */
+/* ============================================ */
+
+.modal-tabs-nav {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid #e5e7eb;
+  background: #f9fafb;
+  border-radius: 12px 12px 0 0;
+}
+
+.modal-tabs-nav .tab-btn {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: #6b7280;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.modal-tabs-nav .tab-btn:hover {
+  color: #374151;
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.modal-tabs-nav .tab-btn.active {
+  color: #2563eb;
+  border-bottom-color: #2563eb;
+  background: white;
+}
+
+/* ============================================ */
+/* PURCHASES TAB                               */
+/* ============================================ */
+
+.purchases-section {
+  padding: 1.5rem 0;
+}
+
+.empty-purchases {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  color: #6b7280;
+  text-align: center;
+}
+
+.empty-purchases svg {
+  font-size: 3rem;
+  color: #d1d5db;
+  margin-bottom: 1rem;
+}
+
+.empty-purchases p {
+  margin: 0 0 0.5rem 0;
+  font-weight: 600;
+  color: #374151;
+  font-size: 1rem;
+}
+
+.empty-purchases span {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.purchases-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.purchase-item {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1rem;
+  transition: all 0.2s ease;
+}
+
+.purchase-item:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
+}
+
+.purchase-info h5 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.purchase-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.purchase-price {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #059669;
+}
+
+.purchase-date {
+  font-size: 0.875rem;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* ============================================ */
+/* MODAL FOOTER BUTTONS                        */
+/* ============================================ */
+
+.modal-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.modal-btn.delete-btn {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.modal-btn.delete-btn:hover {
+  background: #fecaca;
+  transform: translateY(-1px);
+}
+
+.modal-btn.cancel-btn {
+  background: #f3f4f6;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+.modal-btn.cancel-btn:hover {
+  background: #e5e7eb;
+}
+
+.modal-btn.confirm-btn {
+  background: #dbeafe;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
+
+.modal-btn.confirm-btn:hover {
+  background: #bfdbfe;
+  transform: translateY(-1px);
+}
+
+/* ============================================ */
+/* RESPONSIVE                                  */
+/* ============================================ */
+
+@media (max-width: 640px) {
+  .modal-cliente .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .view-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .view-item .value {
+    text-align: left;
+  }
+
+  .modal-tabs-nav .tab-btn {
+    font-size: 0.8rem;
+    padding: 0.75rem 0.5rem;
+  }
+
+  .purchase-details {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}

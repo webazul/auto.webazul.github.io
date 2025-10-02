@@ -83,7 +83,7 @@ export default function Header() {
             <FaHome />
             <span>Início</span>
           </Link>
-          <Link to="/cars" className="nav-link">
+          <Link to="/stock" className="nav-link">
             <FaCar />
             <span>Stock</span>
           </Link>
@@ -101,16 +101,11 @@ export default function Header() {
             <FaComment />
             <span>Contacto</span>
           </button>
-        </nav>
-
-
-        {/* User Actions */}
-        <div className="header-actions">
           <Link to="/dashboard" className="nav-link">
             <FaUser />
             <span>Dashboard</span>
           </Link>
-        </div>
+        </nav>
 
         {/* Mobile Menu Button */}
         <button className="mobile-menu-btn" onClick={toggleMenu}>

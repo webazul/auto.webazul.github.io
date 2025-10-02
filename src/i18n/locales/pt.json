@@ -201,5 +201,48 @@
     "termsService": "Termos de Serviço",
     "cookies": "Política de Cookies",
     "backToTop": "Topo"
+  },
+  "csv": {
+    "headers": {
+      "name": "Nome",
+      "brand": "Marca",
+      "model": "Modelo",
+      "version": "Versão",
+      "year": "Ano",
+      "price": "Preço",
+      "originalPrice": "Preço Original",
+      "promotional": "Promocional",
+      "mileage": "Quilómetros",
+      "fuel": "Combustível",
+      "power": "Potência CV",
+      "displacement": "Cilindrada",
+      "transmission": "Transmissão",
+      "color": "Cor",
+      "doors": "Portas",
+      "seats": "Lugares",
+      "condition": "Condição",
+      "description": "Descrição",
+      "profilePhoto": "URL Foto Principal",
+      "photo1": "URL Foto 1",
+      "photo2": "URL Foto 2",
+      "photo3": "URL Foto 3",
+      "photo4": "URL Foto 4",
+      "stockNumber": "Número Stock",
+      "registrationDate": "Data Matrícula",
+      "monthlyTax": "Imposto Mensal",
+      "annualTax": "Imposto Anual",
+      "stamp": "Selo",
+      "moderatorFee": "Taxa Moderador",
+      "status": "Status",
+      "email": "Email",
+      "phone": "Telefone",
+      "type": "Tipo",
+      "contactDate": "Data do Contato",
+      "notes": "Observações"
+    },
+    "values": {
+      "yes": "Sim",
+      "no": "Não"
+    }
   }
 }

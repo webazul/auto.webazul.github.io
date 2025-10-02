@@ -42,7 +42,7 @@ export default function HeroSection({ storeData }) {
     Object.entries(searchFilters).forEach(([key, value]) => {
       if (value) params.append(key, value)
     })
-    navigate(`/cars?${params.toString()}`)
+    navigate(`/stock?${params.toString()}`)
   }
 
   const marcas = ['BMW', 'Mercedes-Benz', 'Audi', 'Volkswagen', 'Renault', 'Peugeot', 'Citroën', 'Ford', 'Opel', 'Seat', 'Skoda', 'Toyota']

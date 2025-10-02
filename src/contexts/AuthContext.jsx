@@ -1,6 +1,6 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback } from 'react'
 import { onAuthStateChanged } from 'firebase/auth'
-import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore'
+import { doc, getDoc, collection, query, where, getDocs, orderBy } from 'firebase/firestore'
 import { auth, db } from '../firebase/config'
 
 const AuthContext = createContext({})
@@ -18,6 +18,10 @@ export function AuthProvider({ children }) {
   const [currentStore, setCurrentStore] = useState(null)
   const [loading, setLoading] = useState(true)
   const [authReady, setAuthReady] = useState(false)
+
+  // Cache de produtos
+  const [products, setProducts] = useState([])
+  const [productsLoading, setProductsLoading] = useState(false)
 
   // Identificar loja pelo domínio
   useEffect(() => {
@@ -51,6 +55,64 @@ export function AuthProvider({ children }) {
     identifyStore()
   }, [])
 
+  // Função para buscar produtos (só busca se estiver vazio)
+  const fetchProducts = useCallback(async (forceRefresh = false) => {
+    // Se já tem produtos e não está forçando refresh, retorna
+    if (products.length > 0 && !forceRefresh) {
+      console.log('📦 Produtos já em cache, usando cache existente')
+      return products
+    }
+
+    // Se não tem loja, não busca
+    if (!currentStore?.id) {
+      console.warn('⚠️ Loja não identificada, não é possível buscar produtos')
+      return []
+    }
+
+    try {
+      setProductsLoading(true)
+      console.log('🔍 Buscando produtos do Firestore para loja:', currentStore.id)
+
+      const productsRef = collection(db, 'products')
+      const q = query(
+        productsRef,
+        where('storeId', '==', currentStore.id),
+        where('status', '==', 'active'),
+        where('active', '==', true),
+        orderBy('createdAt', 'desc')
+      )
+
+      const querySnapshot = await getDocs(q)
+      const productsData = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }))
+
+      setProducts(productsData)
+      console.log(`✅ ${productsData.length} produtos carregados e salvos no cache`)
+      return productsData
+    } catch (error) {
+      console.error('❌ Erro ao buscar produtos:', error)
+      return []
+    } finally {
+      setProductsLoading(false)
+    }
+  }, [currentStore, products.length])
+
+  // Função para forçar atualização dos produtos
+  const refreshProducts = useCallback(async () => {
+    console.log('🔄 Forçando atualização de produtos...')
+    return await fetchProducts(true)
+  }, [fetchProducts])
+
+  // Buscar produtos automaticamente quando a loja estiver disponível
+  useEffect(() => {
+    if (currentStore?.id && products.length === 0) {
+      console.log('🚀 Loja identificada, buscando produtos automaticamente...')
+      fetchProducts()
+    }
+  }, [currentStore, products.length, fetchProducts])
+
   // Gerenciar autenticação
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -78,6 +140,11 @@ export function AuthProvider({ children }) {
     currentStore,
     loading,
     authReady,
+    // Cache de produtos
+    products,
+    productsLoading,
+    fetchProducts,
+    refreshProducts,
     // Helper para verificar se usuário pode acessar a loja
     canAccessStore: () => {
       if (!currentUser || !currentStore) return false

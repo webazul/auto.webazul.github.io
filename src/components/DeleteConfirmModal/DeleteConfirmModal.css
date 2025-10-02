@@ -1,0 +1,27 @@
+/* ============================================ */
+/* DELETE CONFIRMATION MODAL (GENERIC)         */
+/* ============================================ */
+
+.delete-confirm-modal .warning-text {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  font-weight: 500;
+}
+
+.delete-confirm-modal .modal-btn.delete-btn {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border: none;
+}
+
+.delete-confirm-modal .modal-btn.delete-btn:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  transform: translateY(-1px);
+}
+
+.delete-confirm-modal .modal-btn.delete-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}

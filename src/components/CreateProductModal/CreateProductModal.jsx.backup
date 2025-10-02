@@ -1,0 +1,666 @@
+import { useRef } from 'react'
+import {
+  FaTimes,
+  FaChevronLeft,
+  FaChevronRight,
+  FaCamera,
+  FaImages
+} from 'react-icons/fa'
+import CurrencyInput from 'react-currency-input-field'
+import SearchableSelect from '../SearchableSelect'
+import InlineCrop from '../InlineCrop'
+import './CreateProductModal.css'
+
+export default function CreateProductModal({
+  isOpen,
+  onClose,
+  onSubmit,
+  currentStep,
+  setCurrentStep,
+  carForm,
+  handleCarFormChange,
+  handleCurrencyChange,
+  getCurrencySymbol,
+  getCurrencyInputConfig,
+  marcasOptions,
+  combustivelOptions,
+  showSpecificFields,
+  setShowSpecificFields,
+  isCroppingPhoto,
+  selectedImageFile,
+  handleCropComplete,
+  handleCropCancel,
+  handleProfilePhotoChange,
+  removeProfilePhoto,
+  handleGalleryPhotosChange,
+  removeGalleryPhoto,
+  handleStepClick,
+  handleNextStep,
+  handlePrevStep,
+  validateStep1,
+  isSubmitting,
+  submitStatus,
+  resetCarForm,
+  formatCurrency
+}) {
+  const modalRef = useRef(null)
+
+  if (!isOpen) return null
+
+  return (
+    <div
+      className="modal-overlay"
+      onClick={onClose}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 99999,
+        background: 'rgba(0, 0, 0, 0.7)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '1rem'
+      }}
+    >
+      <div
+        className="modal-content modal-wizard"
+        ref={modalRef}
+        onClick={e => e.stopPropagation()}
+        style={{
+          background: 'white',
+          borderRadius: '12px',
+          maxWidth: '600px',
+          width: '100%',
+          maxHeight: '90vh',
+          overflow: 'auto',
+          position: 'relative'
+        }}
+      >
+        <div className="modal-header">
+          <h3>Adicionar Novo Carro</h3>
+          <button
+            className="modal-close-btn"
+            onClick={() => {
+              onClose()
+              resetCarForm()
+            }}
+          >
+            <FaTimes />
+          </button>
+        </div>
+
+        {/* Progress Steps */}
+        <div className="wizard-steps">
+          <div className={`step ${currentStep >= 1 ? 'active' : ''} ${currentStep > 1 ? 'completed' : ''} ${1 <= currentStep ? 'clickable' : ''}`}
+               onClick={() => handleStepClick(1)}>
+            <div className="step-number">1</div>
+            <div className="step-label">Informações Básicas</div>
+          </div>
+          <div className={`step ${currentStep >= 2 ? 'active' : ''} ${currentStep > 2 ? 'completed' : ''} ${2 <= currentStep ? 'clickable' : ''}`}
+               onClick={() => handleStepClick(2)}>
+            <div className="step-number">2</div>
+            <div className="step-label">Detalhes Opcionais</div>
+          </div>
+          <div className={`step ${currentStep >= 3 ? 'active' : ''} ${currentStep > 3 ? 'completed' : ''} ${3 <= currentStep ? 'clickable' : ''}`}
+               onClick={() => handleStepClick(3)}>
+            <div className="step-number">3</div>
+            <div className="step-label">Fotos</div>
+          </div>
+          <div className={`step ${currentStep >= 4 ? 'active' : ''} ${4 <= currentStep ? 'clickable' : ''}`}
+               onClick={() => handleStepClick(4)}>
+            <div className="step-number">4</div>
+            <div className="step-label">Revisão</div>
+          </div>
+        </div>
+
+        <form onSubmit={onSubmit}>
+          <div className="modal-body wizard-body">
+            {/* Step 1 - Informações Básicas */}
+            {currentStep === 1 && (
+              <div className="wizard-step">
+                <div className="form-grid">
+                  <div className="form-group full-width">
+                    <label>Nome do Anúncio *</label>
+                    <input
+                      type="text"
+                      value={carForm.name}
+                      onChange={(e) => handleCarFormChange('name', e.target.value)}
+                      placeholder="Ex: BMW X5 2024"
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <SearchableSelect
+                      options={marcasOptions}
+                      value={carForm.brand}
+                      onChange={(value) => handleCarFormChange('brand', value)}
+                      placeholder="Selecione uma marca"
+                      label="Marca"
+                      required
+                      searchable={true}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Modelo *</label>
+                    <input
+                      type="text"
+                      value={carForm.model}
+                      onChange={(e) => handleCarFormChange('model', e.target.value)}
+                      placeholder="Ex: X5"
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Ano *</label>
+                    <input
+                      type="number"
+                      value={carForm.year}
+                      onChange={(e) => handleCarFormChange('year', e.target.value)}
+                      min="1900"
+                      max={new Date().getFullYear() + 1}
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Nº Stock/SKU</label>
+                    <input
+                      type="text"
+                      value={carForm.stockNumber}
+                      onChange={(e) => handleCarFormChange('stockNumber', e.target.value)}
+                      placeholder="Ex: WZ-2024-001"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Preço Original ({getCurrencySymbol()})</label>
+                    <CurrencyInput
+                      value={carForm.originalPrice}
+                      onValueChange={(value) => handleCurrencyChange(value, 'originalPrice')}
+                      placeholder="0,00"
+                      decimalsLimit={2}
+                      decimalSeparator=","
+                      groupSeparator="."
+                      prefix=""
+                      allowDecimals={true}
+                      allowNegativeValue={false}
+                      intlConfig={getCurrencyInputConfig()}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Preço Promocional ({getCurrencySymbol()})</label>
+                    <CurrencyInput
+                      value={carForm.price}
+                      onValueChange={(value) => handleCurrencyChange(value, 'price')}
+                      placeholder="0,00"
+                      decimalsLimit={2}
+                      decimalSeparator=","
+                      groupSeparator="."
+                      prefix=""
+                      allowDecimals={true}
+                      allowNegativeValue={false}
+                      intlConfig={getCurrencyInputConfig()}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Cor</label>
+                    <input
+                      type="text"
+                      value={carForm.color}
+                      onChange={(e) => handleCarFormChange('color', e.target.value)}
+                      placeholder="Ex: Preto"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <SearchableSelect
+                      options={combustivelOptions}
+                      value={carForm.fuel}
+                      onChange={(value) => handleCarFormChange('fuel', value)}
+                      placeholder="Selecione o combustível"
+                      label="Combustível"
+                      searchable={false}
+                    />
+                  </div>
+
+                  <div className="form-group full-width">
+                    <label>Quilometragem (KM)</label>
+                    <input
+                      type="number"
+                      value={carForm.mileage}
+                      onChange={(e) => handleCarFormChange('mileage', e.target.value)}
+                      placeholder="Ex: 50000"
+                      min="0"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Step 2 - Detalhes Opcionais */}
+            {currentStep === 2 && (
+              <div className="wizard-step">
+                <div className="form-grid">
+                  <div className="form-group">
+                    <SearchableSelect
+                      options={[
+                        { value: "Novo", label: "Novo" },
+                        { value: "Seminovo", label: "Seminovo" },
+                        { value: "Usado", label: "Usado" }
+                      ]}
+                      value={carForm.condition}
+                      onChange={(value) => handleCarFormChange('condition', value)}
+                      placeholder="Selecione o estado"
+                      label="Estado"
+                      searchable={false}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <SearchableSelect
+                      options={[
+                        { value: "2", label: "2 Portas" },
+                        { value: "3", label: "3 Portas" },
+                        { value: "4", label: "4 Portas" },
+                        { value: "5", label: "5 Portas" }
+                      ]}
+                      value={carForm.doors}
+                      onChange={(value) => handleCarFormChange('doors', value)}
+                      placeholder="Selecione o número de portas"
+                      label="Número de Portas"
+                      searchable={false}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <SearchableSelect
+                      options={[
+                        { value: "Manual", label: "Manual" },
+                        { value: "Automática", label: "Automática" },
+                        { value: "CVT", label: "CVT" }
+                      ]}
+                      value={carForm.transmissao}
+                      onChange={(value) => handleCarFormChange('transmissao', value)}
+                      placeholder="Selecione a transmissão"
+                      label="Transmissão"
+                      searchable={false}
+                    />
+                  </div>
+
+                  <div className="form-group full-width">
+                    <label>Descrição</label>
+                    <textarea
+                      value={carForm.description}
+                      onChange={(e) => handleCarFormChange('description', e.target.value)}
+                      placeholder="Adicione detalhes sobre o veículo..."
+                      rows="4"
+                    />
+                  </div>
+
+                  {/* Seção campos específicos */}
+                  <div className="form-section-header full-width">
+                    <h6>Informações Específicas</h6>
+                    <div className="toggle-switch">
+                      <input
+                        type="checkbox"
+                        id="specificFieldsToggle"
+                        checked={showSpecificFields}
+                        onChange={(e) => setShowSpecificFields(e.target.checked)}
+                      />
+                      <label htmlFor="specificFieldsToggle" className="toggle-label">
+                        <span className="toggle-slider"></span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {showSpecificFields && (
+                    <>
+                      <div className="form-group full-width">
+                        <label>Data de Matrícula</label>
+                        <input
+                          type="date"
+                          value={carForm.dataMatricula}
+                          onChange={(e) => handleCarFormChange('dataMatricula', e.target.value)}
+                        />
+                      </div>
+
+                      <div className="form-group">
+                        <label>IUC Mensal ({getCurrencySymbol()})</label>
+                        <CurrencyInput
+                          value={carForm.iucMensal}
+                          onValueChange={(value) => handleCurrencyChange(value, 'iucMensal')}
+                          placeholder="0,00"
+                          decimalsLimit={2}
+                          decimalSeparator=","
+                          groupSeparator="."
+                          prefix=""
+                          allowDecimals={true}
+                          allowNegativeValue={false}
+                          intlConfig={getCurrencyInputConfig()}
+                        />
+                      </div>
+
+                      <div className="form-group">
+                        <label>IUC Anual ({getCurrencySymbol()})</label>
+                        <CurrencyInput
+                          value={carForm.iucAnual}
+                          onValueChange={(value) => handleCurrencyChange(value, 'iucAnual')}
+                          placeholder="0,00"
+                          decimalsLimit={2}
+                          decimalSeparator=","
+                          groupSeparator="."
+                          prefix=""
+                          allowDecimals={true}
+                          allowNegativeValue={false}
+                          intlConfig={getCurrencyInputConfig()}
+                        />
+                      </div>
+
+                      <div className="form-group">
+                        <label>Selo ({getCurrencySymbol()})</label>
+                        <CurrencyInput
+                          value={carForm.selo}
+                          onValueChange={(value) => handleCurrencyChange(value, 'selo')}
+                          placeholder="0,00"
+                          decimalsLimit={2}
+                          decimalSeparator=","
+                          groupSeparator="."
+                          prefix=""
+                          allowDecimals={true}
+                          allowNegativeValue={false}
+                          intlConfig={getCurrencyInputConfig()}
+                        />
+                      </div>
+
+                      <div className="form-group">
+                        <label>Taxa Moderadora ({getCurrencySymbol()})</label>
+                        <CurrencyInput
+                          value={carForm.taxaModeradora}
+                          onValueChange={(value) => handleCurrencyChange(value, 'taxaModeradora')}
+                          placeholder="0,00"
+                          decimalsLimit={2}
+                          decimalSeparator=","
+                          groupSeparator="."
+                          prefix=""
+                          allowDecimals={true}
+                          allowNegativeValue={false}
+                          intlConfig={getCurrencyInputConfig()}
+                        />
+                      </div>
+                    </>
+                  )}
+
+                </div>
+              </div>
+            )}
+
+            {/* Step 3 - Fotos */}
+            {currentStep === 3 && (
+              <div className="wizard-step">
+                {isCroppingPhoto ? (
+                  /* Modo Crop Inline */
+                  <InlineCrop
+                    selectedFile={selectedImageFile}
+                    onCropComplete={handleCropComplete}
+                    onCancel={handleCropCancel}
+                  />
+                ) : (
+                  /* Modo Normal de Fotos */
+                  <div className="photos-section">
+                    {/* Foto de Perfil */}
+                    <div className="photo-group">
+                      <h5>Foto de Perfil</h5>
+                      <p className="photo-description">Esta foto será exibida como imagem principal nos anúncios</p>
+
+                      <div className="profile-photo-upload">
+                        {carForm.profilePhoto ? (
+                          <div className="photo-preview-container">
+                            <img
+                              src={carForm.profilePhoto.preview}
+                              alt="Foto de perfil"
+                              className="profile-photo-preview"
+                            />
+                            <button
+                              type="button"
+                              className="remove-photo-btn"
+                              onClick={removeProfilePhoto}
+                            >
+                              <FaTimes />
+                            </button>
+                          </div>
+                        ) : (
+                          <label className="photo-upload-zone profile-upload">
+                            <FaCamera className="upload-icon" />
+                            <span>Clique para adicionar foto de perfil</span>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={handleProfilePhotoChange}
+                              style={{ display: 'none' }}
+                            />
+                          </label>
+                        )}
+                      </div>
+                    </div>
+
+                  {/* Galeria de Fotos */}
+                  <div className="photo-group">
+                    <h5>Galeria de Fotos</h5>
+                    <p className="photo-description">Adicione até 8 fotos adicionais para mostrar detalhes do veículo</p>
+
+                    <div className="gallery-photos">
+                      {carForm.gallery.map(photo => (
+                        <div key={photo.id} className="gallery-photo-item">
+                          <img
+                            src={photo.preview}
+                            alt={photo.name}
+                            className="gallery-photo-preview"
+                          />
+                          <button
+                            type="button"
+                            className="remove-photo-btn gallery-remove"
+                            onClick={() => removeGalleryPhoto(photo.id)}
+                          >
+                            <FaTimes />
+                          </button>
+                        </div>
+                      ))}
+
+                      {carForm.gallery.length < 8 && (
+                        <label className="photo-upload-zone gallery-upload">
+                          <FaImages className="upload-icon" />
+                          <span>Adicionar fotos</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            multiple
+                            onChange={handleGalleryPhotosChange}
+                            style={{ display: 'none' }}
+                          />
+                        </label>
+                      )}
+                    </div>
+
+                    {carForm.gallery.length > 0 && (
+                      <p className="gallery-count">{carForm.gallery.length}/8 fotos adicionadas</p>
+                    )}
+                  </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Step 4 - Revisão */}
+            {currentStep === 4 && (
+              <div className="wizard-step">
+                <div className="review-grid">
+                  <div className="review-section">
+                    <h5>Informações Básicas</h5>
+                    <div className="review-item">
+                      <span className="review-label">Nome:</span>
+                      <span className="review-value">{carForm.name || '-'}</span>
+                    </div>
+                    <div className="review-item">
+                      <span className="review-label">Marca/Modelo:</span>
+                      <span className="review-value">{carForm.brand} {carForm.model}</span>
+                    </div>
+                    <div className="review-item">
+                      <span className="review-label">Ano:</span>
+                      <span className="review-value">{carForm.year}</span>
+                    </div>
+                    {carForm.stockNumber && (
+                      <div className="review-item">
+                        <span className="review-label">Stock Number:</span>
+                        <span className="review-value">{carForm.stockNumber}</span>
+                      </div>
+                    )}
+                    {carForm.originalPrice && (
+                      <div className="review-item">
+                        <span className="review-label">Preço Original:</span>
+                        <span className="review-value">{formatCurrency(carForm.originalPrice)}</span>
+                      </div>
+                    )}
+                    <div className="review-item">
+                      <span className="review-label">Preço Promocional:</span>
+                      <span className="review-value">{formatCurrency(carForm.price) || '-'}</span>
+                    </div>
+                    <div className="review-item">
+                      <span className="review-label">Cor:</span>
+                      <span className="review-value">{carForm.color || '-'}</span>
+                    </div>
+                    <div className="review-item">
+                      <span className="review-label">Combustível:</span>
+                      <span className="review-value">{carForm.fuel}</span>
+                    </div>
+                    <div className="review-item">
+                      <span className="review-label">KM:</span>
+                      <span className="review-value">{carForm.mileage || '0'}</span>
+                    </div>
+                  </div>
+
+                  <div className="review-section">
+                    <h5>Detalhes Adicionais</h5>
+                    <div className="review-item">
+                      <span className="review-label">Estado:</span>
+                      <span className="review-value">{carForm.condition}</span>
+                    </div>
+                    <div className="review-item">
+                      <span className="review-label">Portas:</span>
+                      <span className="review-value">{carForm.doors}</span>
+                    </div>
+                    <div className="review-item">
+                      <span className="review-label">Transmissão:</span>
+                      <span className="review-value">{carForm.transmission}</span>
+                    </div>
+                    {carForm.description && (
+                      <div className="review-item full-width">
+                        <span className="review-label">Descrição:</span>
+                        <span className="review-value">{carForm.description}</span>
+                      </div>
+                    )}
+
+                  </div>
+
+                  {/* Seção Portugal se houver dados preenchidos */}
+                  {(carForm.dataMatricula || carForm.iucMensal || carForm.iucAnual || carForm.selo || carForm.taxaModeradora) && (
+                    <div className="review-section">
+                      <h5>Informações Portugal</h5>
+                      {carForm.dataMatricula && (
+                        <div className="review-item">
+                          <span className="review-label">Data de Matrícula:</span>
+                          <span className="review-value">{new Date(carForm.dataMatricula).toLocaleDateString('pt-PT')}</span>
+                        </div>
+                      )}
+                      {carForm.iucMensal && (
+                        <div className="review-item">
+                          <span className="review-label">IUC Mensal:</span>
+                          <span className="review-value">{formatCurrency(carForm.iucMensal)}</span>
+                        </div>
+                      )}
+                      {carForm.iucAnual && (
+                        <div className="review-item">
+                          <span className="review-label">IUC Anual:</span>
+                          <span className="review-value">{formatCurrency(carForm.iucAnual)}</span>
+                        </div>
+                      )}
+                      {carForm.selo && (
+                        <div className="review-item">
+                          <span className="review-label">Selo:</span>
+                          <span className="review-value">{formatCurrency(carForm.selo)}</span>
+                        </div>
+                      )}
+                      {carForm.taxaModeradora && (
+                        <div className="review-item">
+                          <span className="review-label">Taxa Moderadora:</span>
+                          <span className="review-value">{formatCurrency(carForm.taxaModeradora)}</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="modal-footer wizard-footer">
+            {currentStep > 1 && (
+              <button
+                type="button"
+                className="modal-btn secondary-btn"
+                onClick={handlePrevStep}
+                disabled={isSubmitting}
+              >
+                <FaChevronLeft />
+                Voltar
+              </button>
+            )}
+
+            {currentStep === 1 && (
+              <button
+                type="button"
+                className="modal-btn cancel-btn"
+                onClick={() => {
+                  onClose()
+                  resetCarForm()
+                }}
+                disabled={isSubmitting}
+              >
+                Cancelar
+              </button>
+            )}
+
+            {currentStep < 4 ? (
+              <button
+                type="button"
+                className={`modal-btn confirm-btn ${currentStep === 1 && !validateStep1() ? 'disabled' : ''}`}
+                onClick={(e) => {
+                  handleNextStep(e);
+                }}
+                disabled={currentStep === 1 && !validateStep1()}
+              >
+                Próximo
+                <FaChevronRight />
+              </button>
+            ) : (
+              <button
+                type="submit"
+                className="modal-btn confirm-btn"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (submitStatus || 'Salvando...') : 'Adicionar Carro'}
+              </button>
+            )}
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}

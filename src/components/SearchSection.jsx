@@ -268,10 +268,15 @@ export default function SearchSection({ cars = [], availableBrands = [], loading
             <>
               <div className="cars-grid">
                 {filteredCars.slice(0, maxCarsDisplay).map((car, index) => (
-                  <div key={car.id || index} className="car-card">
+                  <div
+                    key={car.id || index}
+                    className="car-card"
+                    onClick={() => navigate(`/v/${car.id}`)}
+                    style={{ cursor: 'pointer' }}
+                  >
                     <div className="car-image">
-                      {car.imageUrl ? (
-                        <img src={car.imageUrl} alt={`${car.brand || car.marca} ${car.model || car.modelo}`} />
+                      {car.profilePhoto ? (
+                        <img src={car.profilePhoto} alt={`${car.brand || car.marca} ${car.model || car.modelo}`} />
                       ) : (
                         <div className="car-image-placeholder">
                           <FaCar className="placeholder-icon" />
@@ -352,7 +357,7 @@ export default function SearchSection({ cars = [], availableBrands = [], loading
                 <div className="view-all-cars">
                   <button
                     className="view-all-btn"
-                    onClick={() => navigate('/cars')}
+                    onClick={() => navigate('/stock')}
                   >
                     <FaCar />
                     <span>Ver Todos os Carros ({filteredCars.length})</span>

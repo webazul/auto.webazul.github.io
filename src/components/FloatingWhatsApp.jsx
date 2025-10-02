@@ -1,9 +1,15 @@
 import { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import { FaWhatsapp } from 'react-icons/fa'
 import './FloatingWhatsApp.css'
 
 export default function FloatingWhatsApp() {
   const [isNearFooter, setIsNearFooter] = useState(false)
+  const location = useLocation()
+
+  // Não mostrar WhatsApp nas páginas /login e /dashboard
+  const hiddenPaths = ['/login', '/dashboard']
+  const shouldHide = hiddenPaths.includes(location.pathname)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,6 +29,11 @@ export default function FloatingWhatsApp() {
 
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  // Não renderizar se estiver em rota oculta
+  if (shouldHide) {
+    return null
+  }
 
   const dynamicStyle = {
     position: 'fixed',

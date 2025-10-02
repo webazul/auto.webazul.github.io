@@ -1,0 +1,21 @@
+/* ============================================ */
+/* DASHBOARD SETTINGS COMPONENT                */
+/* ============================================ */
+
+/* This component uses existing global styles from Dashboard.css:
+   - .dashboard-content
+   - .content-header
+   - .filters-section
+   - .form-group
+   - .add-btn
+   - .spinner
+   - .alert, .alert-success, .alert-danger
+   - .product-status-badge
+*/
+
+/* Responsive overrides for settings grid */
+@media (max-width: 768px) {
+  .dashboard-content .filters-section > div[style*="gridTemplateColumns"] {
+    grid-template-columns: 1fr !important;
+  }
+}

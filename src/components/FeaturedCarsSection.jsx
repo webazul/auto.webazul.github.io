@@ -127,7 +127,7 @@ export default function FeaturedCarsSection() {
                 key={car.id}
                 className="featured-card"
                 style={{ animationDelay: `${index * 0.1}s` }}
-                onClick={() => navigate(`/cars/${car.id}`)}
+                onClick={() => navigate(`/v/${car.id}`)}
               >
                 {/* Badge */}
                 <div className={`car-badge ${badge.color}`}>
@@ -194,7 +194,7 @@ export default function FeaturedCarsSection() {
         <div className="featured-actions">
           <button
             className="view-all-btn"
-            onClick={() => navigate('/cars')}
+            onClick={() => navigate('/stock')}
           >
             <FaCar />
             <span>Ver Todo o Stock</span>

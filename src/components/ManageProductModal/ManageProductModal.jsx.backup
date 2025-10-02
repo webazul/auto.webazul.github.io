@@ -1,0 +1,802 @@
+import { useState } from 'react'
+import {
+  FaTimes,
+  FaChevronLeft,
+  FaChevronRight,
+  FaCheck,
+  FaEdit,
+  FaTrash,
+  FaPlus,
+  FaUser,
+  FaEnvelope,
+  FaPhone,
+  FaStickyNote,
+  FaClock,
+  FaUsers,
+  FaUpload,
+  FaFilePdf,
+  FaFileAlt,
+  FaFileImage,
+  FaEye,
+  FaDownload,
+  FaInfoCircle
+} from 'react-icons/fa'
+import SearchableSelect from '../SearchableSelect'
+import './ManageProductModal.css'
+
+export default function ManageProductModal({
+  isOpen,
+  onClose,
+  product,
+  allClientes,
+  currentStore,
+  onUpdateInterestedStatus,
+  onRemoveInterested,
+  onAddInterested,
+  onDelete,
+  onMarkAsSold,
+  onEdit,
+  formatCurrency,
+  showAddInterestedModal,
+  setShowAddInterestedModal,
+  interestedType,
+  setInterestedType,
+  selectedCliente,
+  setSelectedCliente,
+  newInterestedData,
+  setNewInterestedData
+}) {
+  // States locais
+  const [activeTab, setActiveTab] = useState('info')
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0)
+  const [isEditMode, setIsEditMode] = useState(false)
+
+  const handleClose = () => {
+    setActiveTab('info')
+    setCurrentPhotoIndex(0)
+    setIsEditMode(false)
+    onClose()
+  }
+
+  if (!isOpen || !product) return null
+
+  // Preparar todas as fotos (perfil + galeria)
+  const allPhotos = []
+  if (product.profilePhoto) allPhotos.push(product.profilePhoto)
+  if (product.gallery && product.gallery.length > 0) {
+    allPhotos.push(...product.gallery)
+  }
+
+  return (
+    <>
+      <div
+        className="modal-overlay"
+        onClick={handleClose}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 99999,
+          background: 'rgba(0, 0, 0, 0.7)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '1rem'
+        }}
+      >
+        <div
+          className="modal manage-modal"
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            background: 'white',
+            borderRadius: '12px',
+            maxWidth: '700px',
+            width: '100%',
+            maxHeight: '90vh',
+            overflow: 'auto',
+            position: 'relative'
+          }}
+        >
+          {/* Header */}
+          <div className="modal-header">
+            <h3>{isEditMode ? 'Editar Produto' : 'Gerenciar Produto'}</h3>
+            <button className="modal-close" onClick={handleClose}>
+              <FaTimes />
+            </button>
+          </div>
+
+          {/* Body */}
+          <div className="modal-body manage-modal-body">
+            {isEditMode ? (
+              <div className="edit-mode-content">
+                <p>Modo de edição em desenvolvimento...</p>
+              </div>
+            ) : (
+              <div className="product-summary-tabs">
+                {/* Tabs Navigation */}
+                <div className="tabs-nav">
+                  <button
+                    className={`tab-btn ${activeTab === 'info' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('info')}
+                  >
+                    Informações
+                  </button>
+                  <button
+                    className={`tab-btn ${activeTab === 'details' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('details')}
+                  >
+                    Detalhes
+                  </button>
+                  <button
+                    className={`tab-btn ${activeTab === 'files' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('files')}
+                  >
+                    Arquivos
+                  </button>
+                  <button
+                    className={`tab-btn ${activeTab === 'interested' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('interested')}
+                  >
+                    Interessados
+                  </button>
+                </div>
+
+                {/* Tabs Content */}
+                <div className="tabs-content">
+                  {/* Aba Informações */}
+                  {activeTab === 'info' && (
+                    <div className="tab-panel">
+                      {/* Carrossel de Fotos */}
+                      {allPhotos.length > 0 && (
+                        <div className="photo-carousel">
+                          <div className="carousel-main">
+                            <img
+                              src={allPhotos[currentPhotoIndex]}
+                              alt={`Foto ${currentPhotoIndex + 1}`}
+                              className="carousel-main-image"
+                              onClick={() => window.open(allPhotos[currentPhotoIndex], '_blank')}
+                            />
+                            {allPhotos.length > 1 && (
+                              <>
+                                <button
+                                  className="carousel-nav prev"
+                                  onClick={() => setCurrentPhotoIndex((prev) =>
+                                    prev === 0 ? allPhotos.length - 1 : prev - 1
+                                  )}
+                                >
+                                  <FaChevronLeft />
+                                </button>
+                                <button
+                                  className="carousel-nav next"
+                                  onClick={() => setCurrentPhotoIndex((prev) =>
+                                    prev === allPhotos.length - 1 ? 0 : prev + 1
+                                  )}
+                                >
+                                  <FaChevronRight />
+                                </button>
+                                <div className="carousel-counter">
+                                  {currentPhotoIndex + 1} / {allPhotos.length}
+                                </div>
+                              </>
+                            )}
+                          </div>
+                          {allPhotos.length > 1 && (
+                            <div className="carousel-thumbnails">
+                              {allPhotos.map((photo, index) => (
+                                <img
+                                  key={index}
+                                  src={photo}
+                                  alt={`Thumbnail ${index + 1}`}
+                                  className={`carousel-thumbnail ${index === currentPhotoIndex ? 'active' : ''}`}
+                                  onClick={() => setCurrentPhotoIndex(index)}
+                                />
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Informações Básicas */}
+                      <div className="summary-section">
+                        <h5>Informações Básicas</h5>
+                        <div className="summary-item">
+                          <span className="label">Nome:</span>
+                          <span className="value">{product.name || product.nome}</span>
+                        </div>
+                        <div className="summary-item">
+                          <span className="label">Marca:</span>
+                          <span className="value">{product.brand || product.marca}</span>
+                        </div>
+                        <div className="summary-item">
+                          <span className="label">Modelo:</span>
+                          <span className="value">{product.model || product.modelo}</span>
+                        </div>
+                        <div className="summary-item">
+                          <span className="label">Versão:</span>
+                          <span className="value">{product.version || product.versao || '-'}</span>
+                        </div>
+                        <div className="summary-item">
+                          <span className="label">Ano:</span>
+                          <span className="value">{product.year || product.ano}</span>
+                        </div>
+                        <div className="summary-item">
+                          <span className="label">Preço de Venda:</span>
+                          <span className="value price">{formatCurrency(product.price || product.preco)}</span>
+                        </div>
+                        {(product.originalPrice || product.precoOriginal) && (
+                          <div className="summary-item">
+                            <span className="label">Preço Original:</span>
+                            <span className="value">{formatCurrency(product.originalPrice || product.precoOriginal)}</span>
+                          </div>
+                        )}
+                        <div className="summary-item">
+                          <span className="label">Status:</span>
+                          <span className={`status-badge ${
+                            (product.status || (product.ativo ? 'active' : 'inactive'))
+                          }`}>
+                            {(() => {
+                              const status = product.status || (product.vendido ? 'sold' : product.excluido ? 'deleted' : product.ativo ? 'active' : 'inactive')
+                              switch (status) {
+                                case 'active': return 'Ativo'
+                                case 'sold': return 'Vendido'
+                                case 'deleted': return 'Excluído'
+                                default: return 'Inativo'
+                              }
+                            })()}
+                          </span>
+                        </div>
+                        {product.stockNumber && (
+                          <div className="summary-item">
+                            <span className="label">Nº Stock:</span>
+                            <span className="value">{product.stockNumber}</span>
+                          </div>
+                        )}
+                        {product.vin && (
+                          <div className="summary-item">
+                            <span className="label">VIN:</span>
+                            <span className="value">{product.vin}</span>
+                          </div>
+                        )}
+                        {product.licensePlate && (
+                          <div className="summary-item">
+                            <span className="label">Matrícula:</span>
+                            <span className="value">{product.licensePlate}</span>
+                          </div>
+                        )}
+                        {((product.description && product.description.trim()) || (product.descricao && product.descricao.trim())) && (
+                          <div className="summary-item full-width">
+                            <span className="label">Descrição:</span>
+                            <p className="description-text">{product.description || product.descricao}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Aba Detalhes */}
+                  {activeTab === 'details' && (
+                    <div className="tab-panel">
+                      <div className="summary-section">
+                        <h5>Especificações Técnicas</h5>
+                        {((product.color && product.color.trim()) || (product.cor && product.cor.trim())) && (
+                          <div className="summary-item">
+                            <span className="label">Cor:</span>
+                            <span className="value">{product.color || product.cor}</span>
+                          </div>
+                        )}
+                        {((product.fuel && product.fuel.trim()) || (product.combustivel && product.combustivel.trim())) && (
+                          <div className="summary-item">
+                            <span className="label">Combustível:</span>
+                            <span className="value">{product.fuel || product.combustivel}</span>
+                          </div>
+                        )}
+                        {(() => {
+                          const mileage = product.mileage ?? product.km
+                          const hasValidMileage = mileage !== undefined &&
+                                                  mileage !== null &&
+                                                  mileage !== '' &&
+                                                  (typeof mileage === 'number' || (typeof mileage === 'string' && mileage.trim() !== ''))
+                          return hasValidMileage && (
+                            <div className="summary-item">
+                              <span className="label">Quilometragem:</span>
+                              <span className="value">{mileage.toLocaleString()} km</span>
+                            </div>
+                          )
+                        })()}
+                        {product.transmission && (
+                          <div className="summary-item">
+                            <span className="label">Transmissão:</span>
+                            <span className="value">{product.transmission}</span>
+                          </div>
+                        )}
+                        {product.caixa && (
+                          <div className="summary-item">
+                            <span className="label">Caixa:</span>
+                            <span className="value">{product.caixa}</span>
+                          </div>
+                        )}
+                        {product.doors && (
+                          <div className="summary-item">
+                            <span className="label">Portas:</span>
+                            <span className="value">{product.doors}</span>
+                          </div>
+                        )}
+                        {product.seats && (
+                          <div className="summary-item">
+                            <span className="label">Lugares:</span>
+                            <span className="value">{product.seats}</span>
+                          </div>
+                        )}
+                        {product.power && (
+                          <div className="summary-item">
+                            <span className="label">Potência:</span>
+                            <span className="value">{product.power} cv</span>
+                          </div>
+                        )}
+                        {product.engineCapacity && (
+                          <div className="summary-item">
+                            <span className="label">Cilindrada:</span>
+                            <span className="value">{product.engineCapacity} cm³</span>
+                          </div>
+                        )}
+                        {product.condition && (
+                          <div className="summary-item">
+                            <span className="label">Condição:</span>
+                            <span className="value">{product.condition}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Equipamentos */}
+                      {product.features && product.features.length > 0 && (
+                        <div className="summary-section">
+                          <h5>Equipamentos</h5>
+                          <div className="features-list">
+                            {product.features.map((feature, index) => (
+                              <div key={index} className="feature-item">
+                                <FaCheck className="feature-icon" />
+                                <span>{feature}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Aba Arquivos */}
+                  {activeTab === 'files' && (
+                    <div className="tab-panel">
+                      <div className="files-section">
+                        <div className="files-header">
+                          <h5>Documentos do Veículo</h5>
+                          <button
+                            className="upload-btn"
+                            onClick={() => alert('Funcionalidade de upload em desenvolvimento')}
+                          >
+                            <FaUpload />
+                            Adicionar Arquivo
+                          </button>
+                        </div>
+
+                        <div className="files-list">
+                          <div className="file-item">
+                            <div className="file-icon">
+                              <FaFilePdf />
+                            </div>
+                            <div className="file-info">
+                              <div className="file-name">Documento_Propriedade.pdf</div>
+                              <div className="file-meta">
+                                <span className="file-size">2.4 MB</span>
+                                <span className="file-date">15/12/2024</span>
+                              </div>
+                            </div>
+                            <div className="file-actions">
+                              <button className="file-action-btn view" onClick={() => alert('Visualizar arquivo (mockado)')} title="Visualizar">
+                                <FaEye />
+                              </button>
+                              <button className="file-action-btn download" onClick={() => alert('Download arquivo (mockado)')} title="Download">
+                                <FaDownload />
+                              </button>
+                              <button className="file-action-btn delete" onClick={() => alert('Excluir arquivo (mockado)')} title="Excluir">
+                                <FaTrash />
+                              </button>
+                            </div>
+                          </div>
+
+                          <div className="file-item">
+                            <div className="file-icon">
+                              <FaFileAlt />
+                            </div>
+                            <div className="file-info">
+                              <div className="file-name">Inspecao_Tecnica_2024.pdf</div>
+                              <div className="file-meta">
+                                <span className="file-size">1.8 MB</span>
+                                <span className="file-date">10/12/2024</span>
+                              </div>
+                            </div>
+                            <div className="file-actions">
+                              <button className="file-action-btn view" onClick={() => alert('Visualizar arquivo (mockado)')} title="Visualizar">
+                                <FaEye />
+                              </button>
+                              <button className="file-action-btn download" onClick={() => alert('Download arquivo (mockado)')} title="Download">
+                                <FaDownload />
+                              </button>
+                              <button className="file-action-btn delete" onClick={() => alert('Excluir arquivo (mockado)')} title="Excluir">
+                                <FaTrash />
+                              </button>
+                            </div>
+                          </div>
+
+                          <div className="file-item">
+                            <div className="file-icon">
+                              <FaFileImage />
+                            </div>
+                            <div className="file-info">
+                              <div className="file-name">Certificado_Garantia.jpg</div>
+                              <div className="file-meta">
+                                <span className="file-size">890 KB</span>
+                                <span className="file-date">05/12/2024</span>
+                              </div>
+                            </div>
+                            <div className="file-actions">
+                              <button className="file-action-btn view" onClick={() => alert('Visualizar arquivo (mockado)')} title="Visualizar">
+                                <FaEye />
+                              </button>
+                              <button className="file-action-btn download" onClick={() => alert('Download arquivo (mockado)')} title="Download">
+                                <FaDownload />
+                              </button>
+                              <button className="file-action-btn delete" onClick={() => alert('Excluir arquivo (mockado)')} title="Excluir">
+                                <FaTrash />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="files-info">
+                          <p><strong>Total:</strong> 3 arquivos (5.1 MB)</p>
+                          <p className="info-note">
+                            <FaInfoCircle /> Os arquivos são armazenados de forma segura e podem ser acessados a qualquer momento.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Aba Interessados */}
+                  {activeTab === 'interested' && (
+                    <div className="tab-panel">
+                      <div className="interested-section">
+                        <div className="interested-header">
+                          <h5>Fila de Interessados ({product.interested?.length || 0})</h5>
+                          <button
+                            className="add-interested-btn"
+                            onClick={() => {
+                              setInterestedType('existing')
+                              setSelectedCliente(null)
+                              setNewInterestedData({
+                                name: '',
+                                email: '',
+                                phone: '',
+                                status: 'interested',
+                                notes: ''
+                              })
+                              setShowAddInterestedModal(true)
+                            }}
+                          >
+                            <FaPlus />
+                            Adicionar Interessado
+                          </button>
+                        </div>
+
+                        {product.interested && product.interested.length > 0 ? (
+                          <div className="interested-list">
+                            {product.interested.map((person, index) => (
+                              <div key={index} className="interested-item">
+                                <div className="interested-avatar">
+                                  <FaUser />
+                                </div>
+                                <div className="interested-info">
+                                  <div className="interested-name">{person.clientName}</div>
+                                  <div className="interested-contact">
+                                    {person.clientEmail && (
+                                      <span className="contact-item">
+                                        <FaEnvelope /> {person.clientEmail}
+                                      </span>
+                                    )}
+                                    {person.clientPhone && (
+                                      <span className="contact-item">
+                                        <FaPhone /> {person.clientPhone}
+                                      </span>
+                                    )}
+                                  </div>
+                                  {person.notes && (
+                                    <div className="interested-notes">
+                                      <FaStickyNote /> {person.notes}
+                                    </div>
+                                  )}
+                                  <div className="interested-meta">
+                                    <FaClock /> Adicionado em {new Date(person.createdAt?.seconds * 1000).toLocaleDateString('pt-PT')}
+                                  </div>
+                                </div>
+                                <div className="interested-actions">
+                                  <select
+                                    className="status-select"
+                                    value={person.status}
+                                    onChange={(e) => onUpdateInterestedStatus(index, e.target.value)}
+                                  >
+                                    <option value="interested">Interessado</option>
+                                    <option value="negotiating">Em Negociação</option>
+                                    <option value="proposal_sent">Proposta Enviada</option>
+                                    <option value="waiting">Aguardando Resposta</option>
+                                    <option value="gave_up">Desistiu</option>
+                                  </select>
+                                  <button
+                                    className="interested-action-btn remove"
+                                    onClick={() => onRemoveInterested(index)}
+                                    title="Remover"
+                                  >
+                                    <FaTrash />
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="empty-interested">
+                            <FaUsers />
+                            <p>Nenhum interessado ainda</p>
+                            <span>Adicione clientes interessados neste veículo</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Footer */}
+          <div className="modal-footer manage-modal-footer">
+            {!isEditMode && (
+              <div className="manage-actions">
+                {(() => {
+                  const currentStatus = product?.status || (
+                    product?.vendido ? 'sold' :
+                    product?.excluido ? 'deleted' :
+                    product?.ativo ? 'active' : 'active'
+                  )
+
+                  if (currentStatus === 'deleted') {
+                    return (
+                      <p style={{
+                        textAlign: 'center',
+                        color: '#6b7280',
+                        fontStyle: 'italic',
+                        margin: '1rem 0'
+                      }}>
+                        Este item foi excluído e não pode ser editado.
+                      </p>
+                    )
+                  }
+
+                  if (currentStatus === 'sold') {
+                    return (
+                      <button
+                        className="manage-btn delete"
+                        onClick={onDelete}
+                      >
+                        <FaTrash />
+                        Excluir
+                      </button>
+                    )
+                  }
+
+                  return (
+                    <>
+                      <button
+                        className="manage-btn delete"
+                        onClick={onDelete}
+                      >
+                        <FaTrash />
+                        Excluir
+                      </button>
+                      <button
+                        className="manage-btn sold"
+                        onClick={onMarkAsSold}
+                      >
+                        <FaCheck />
+                        Marcar como Vendido
+                      </button>
+                      <button
+                        className="manage-btn edit"
+                        onClick={onEdit}
+                      >
+                        <FaEdit />
+                        Editar
+                      </button>
+                    </>
+                  )
+                })()}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Modal Adicionar Interessado */}
+      {showAddInterestedModal && (
+        <div
+          className="modal-overlay confirmation-modal-high-priority"
+          onClick={() => setShowAddInterestedModal(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.85)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1rem'
+          }}
+        >
+          <div
+            className="modal-content add-interested-modal"
+            onClick={e => e.stopPropagation()}
+            style={{
+              background: 'white',
+              borderRadius: '12px',
+              maxWidth: '600px',
+              width: '100%',
+              maxHeight: '90vh',
+              overflow: 'auto',
+              position: 'relative',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+            }}
+          >
+            <div className="modal-header">
+              <h3>Adicionar Interessado</h3>
+              <button
+                className="modal-close-btn"
+                onClick={() => setShowAddInterestedModal(false)}
+              >
+                <FaTimes />
+              </button>
+            </div>
+
+            <div className="modal-body">
+              <div className="form-group">
+                <label>Cliente:</label>
+                <div className="radio-group">
+                  <label className="radio-option">
+                    <input
+                      type="radio"
+                      name="interestedType"
+                      value="existing"
+                      checked={interestedType === 'existing'}
+                      onChange={(e) => setInterestedType(e.target.value)}
+                    />
+                    <span>Selecionar Existente</span>
+                  </label>
+                  <label className="radio-option">
+                    <input
+                      type="radio"
+                      name="interestedType"
+                      value="new"
+                      checked={interestedType === 'new'}
+                      onChange={(e) => setInterestedType(e.target.value)}
+                    />
+                    <span>Criar Novo</span>
+                  </label>
+                </div>
+              </div>
+
+              {interestedType === 'existing' && (
+                <div className="form-group">
+                  <label>Buscar Cliente:</label>
+                  <SearchableSelect
+                    options={allClientes.map(c => ({
+                      value: c.id,
+                      label: `${c.nome} - ${c.email || c.telefone || ''}`
+                    }))}
+                    value={selectedCliente?.id || ''}
+                    onChange={(value) => {
+                      const cliente = allClientes.find(c => c.id === value)
+                      setSelectedCliente(cliente)
+                    }}
+                    placeholder="Digite para buscar..."
+                  />
+                  {selectedCliente && (
+                    <div className="selected-client-preview">
+                      <div><strong>Nome:</strong> {selectedCliente.nome}</div>
+                      {selectedCliente.email && <div><strong>Email:</strong> {selectedCliente.email}</div>}
+                      {selectedCliente.telefone && <div><strong>Telefone:</strong> {selectedCliente.telefone}</div>}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {interestedType === 'new' && (
+                <>
+                  <div className="form-group">
+                    <label>Nome Completo: *</label>
+                    <input
+                      type="text"
+                      value={newInterestedData.name}
+                      onChange={(e) => setNewInterestedData({...newInterestedData, name: e.target.value})}
+                      placeholder="Digite o nome"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Email:</label>
+                    <input
+                      type="email"
+                      value={newInterestedData.email}
+                      onChange={(e) => setNewInterestedData({...newInterestedData, email: e.target.value})}
+                      placeholder="email@exemplo.com"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Telefone:</label>
+                    <input
+                      type="tel"
+                      value={newInterestedData.phone}
+                      onChange={(e) => setNewInterestedData({...newInterestedData, phone: e.target.value})}
+                      placeholder="+351 912 345 678"
+                    />
+                  </div>
+                </>
+              )}
+
+              <div className="form-group">
+                <label>Status:</label>
+                <select
+                  value={newInterestedData.status}
+                  onChange={(e) => setNewInterestedData({...newInterestedData, status: e.target.value})}
+                >
+                  <option value="interested">Interessado</option>
+                  <option value="negotiating">Em Negociação</option>
+                  <option value="proposal_sent">Proposta Enviada</option>
+                  <option value="waiting">Aguardando Resposta</option>
+                  <option value="gave_up">Desistiu</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Observações:</label>
+                <textarea
+                  value={newInterestedData.notes}
+                  onChange={(e) => setNewInterestedData({...newInterestedData, notes: e.target.value})}
+                  placeholder="Ex: Cliente quer test drive, financiamento em 48x..."
+                  rows={3}
+                />
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button
+                className="modal-btn cancel-btn"
+                onClick={() => setShowAddInterestedModal(false)}
+              >
+                Cancelar
+              </button>
+              <button
+                className="modal-btn primary-btn"
+                onClick={onAddInterested}
+                disabled={interestedType === 'existing' ? !selectedCliente : !newInterestedData.name}
+              >
+                <FaPlus />
+                Adicionar Interessado
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  )
+}

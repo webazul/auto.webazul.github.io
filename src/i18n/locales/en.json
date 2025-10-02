@@ -1,0 +1,243 @@
+{
+  "header": {
+    "home": "Home",
+    "stock": "Stock",
+    "services": "Services",
+    "contact": "Contact",
+    "dashboard": "Dashboard"
+  },
+  "hero": {
+    "title": "Find Your",
+    "titleHighlight": " Perfect Car,",
+    "titleEnd": "Fast and Easy",
+    "subtitle": "Your next journey starts here. Explore our premium collection of selected vehicles with warranty and full transparency.",
+    "ctaPrimary": "View Available Stock",
+    "ctaSecondary": "Contact Us"
+  },
+  "search": {
+    "title": "Search Cars",
+    "brand": "Brand",
+    "brandPlaceholder": "All brands",
+    "model": "Model",
+    "modelPlaceholder": "Ex: Golf, A4, Series 3...",
+    "priceMin": "Min Price",
+    "priceMinPlaceholder": "Ex: 15,000",
+    "priceMax": "Max Price",
+    "priceMaxPlaceholder": "Ex: 25,000",
+    "yearMin": "Min Year",
+    "yearMinPlaceholder": "Ex: 2018",
+    "yearMax": "Max Year",
+    "yearMaxPlaceholder": "Ex: 2024",
+    "fuel": "Fuel",
+    "fuelPlaceholder": "Any type",
+    "kmMax": "Max KM",
+    "kmMaxPlaceholder": "Ex: 100,000",
+    "searchButton": "Search Cars",
+    "emptyTitle": "No cars found",
+    "emptyDescription": "Try adjusting the filters to find your ideal vehicle.",
+    "loadingTitle": "Loading cars...",
+    "loadingDescription": "Please wait while we fetch available vehicles.",
+    "viewAllCars": "View All Cars"
+  },
+  "services": {
+    "title": "What We Offer",
+    "subtitle": "Complete services for an exceptional buying experience",
+    "warranty": {
+      "title": "Full Warranty",
+      "description": "All cars with 12-month warranty and complete technical support",
+      "feature1": "12-month warranty",
+      "feature2": "24/7 support",
+      "feature3": "Original parts"
+    },
+    "documentation": {
+      "title": "Legal Documentation",
+      "description": "We handle all necessary documentation and transfers",
+      "feature1": "Complete documentation",
+      "feature2": "Free transfer",
+      "feature3": "Legal support"
+    },
+    "support": {
+      "title": "Customer Support",
+      "description": "Dedicated team for after-sales support and inquiries",
+      "feature1": "Personalized support",
+      "feature2": "Quick response",
+      "feature3": "Satisfaction guaranteed"
+    },
+    "badge": "Most Popular",
+    "learnMore": "Learn More",
+    "statsTitle": "Numbers That Speak For Themselves",
+    "statsSubtitle": "Our experience and dedication are reflected in results",
+    "stat1": {
+      "number": "98%",
+      "label": "Satisfied Customers",
+      "subtext": "Positive reviews"
+    },
+    "stat2": {
+      "number": "500+",
+      "label": "Cars Sold",
+      "subtext": "In 2024"
+    },
+    "stat3": {
+      "number": "24h",
+      "label": "Credit Approval",
+      "subtext": "Guaranteed response"
+    },
+    "stat4": {
+      "number": "12",
+      "label": "Month Warranty",
+      "subtext": "On all vehicles"
+    },
+    "ctaTitle": "Ready to Find Your Next Car?",
+    "ctaDescription": "Explore our stock and enjoy all these premium services",
+    "ctaPrimary": "View Available Stock",
+    "ctaSecondary": "Contact Us"
+  },
+  "trust": {
+    "title": "Why Choose Us?",
+    "subtitle": "Certifications, warranties and commitment to excellence",
+    "cert1": {
+      "title": "ISO 9001:2015",
+      "subtitle": "Certified Quality",
+      "description": "International quality management certification"
+    },
+    "cert2": {
+      "title": "ACAP Portugal",
+      "subtitle": "Official Member",
+      "description": "Portuguese Automobile Trade Association"
+    },
+    "cert3": {
+      "title": "Excellence Award",
+      "subtitle": "Best Dealership 2024",
+      "description": "Recognition for service quality"
+    },
+    "cert4": {
+      "title": "Trust Seal",
+      "subtitle": "Verified Company",
+      "description": "Validation of credibility and transparency"
+    },
+    "indicatorsTitle": "Trust Indicators",
+    "indicatorsSubtitle": "Numbers that demonstrate our commitment",
+    "indicator1": {
+      "title": "Secure Transactions",
+      "value": "100%",
+      "description": "Protected payments and complete legal documentation"
+    },
+    "indicator2": {
+      "title": "Full Warranty",
+      "value": "12 months",
+      "description": "Complete coverage on all vehicles sold"
+    },
+    "indicator3": {
+      "title": "Customer Satisfaction",
+      "value": "4.9/5",
+      "description": "Average rating based on over 200 reviews"
+    }
+  },
+  "testimonials": {
+    "title": "What Our Customers Say",
+    "subtitle": "Real stories of satisfaction and trust",
+    "carPurchased": "Car purchased:"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "We're here to help you find the perfect car. Get in touch and receive personalized service.",
+    "contactInfo": "Contact",
+    "form": {
+      "name": "Full Name",
+      "namePlaceholder": "Your full name",
+      "email": "Email",
+      "emailPlaceholder": "your@email.com",
+      "phone": "Phone",
+      "phonePlaceholder": "+351 912 345 678",
+      "subject": "Subject",
+      "subjectPlaceholder": "Select a subject",
+      "subjectOptions": {
+        "info": "Vehicle information",
+        "visit": "Schedule visit",
+        "financing": "Financing",
+        "tradein": "Trade-in",
+        "aftersales": "After-sales support",
+        "other": "Other"
+      },
+      "message": "Message",
+      "messagePlaceholder": "Write your message here...",
+      "submit": "Send Message",
+      "submitting": "Sending...",
+      "required": "*"
+    },
+    "info": {
+      "location": "Location",
+      "locationAddress": "Republic Avenue, 1500",
+      "locationCity": "1069-124 Lisbon",
+      "phone": "Phone",
+      "phoneNumber": "+351 21 123 4567",
+      "phoneHours": "Mon-Fri: 9am-7pm",
+      "email": "Email",
+      "emailAddress": "info@webazulcars.pt",
+      "emailResponse": "Response in 24h"
+    },
+    "demo": {
+      "title": "Demo Website",
+      "message": "This is a demo website. There is no real communication and no messages will be sent. Data entered will not be stored."
+    }
+  },
+  "footer": {
+    "description": "Your trusted partner in buying the perfect car. Quality, transparency and guaranteed satisfaction in every deal.",
+    "quickLinks": "Quick Links",
+    "home": "Home",
+    "stock": "Car Stock",
+    "services": "Services",
+    "about": "About Us",
+    "testimonials": "Testimonials",
+    "followUs": "Follow Us",
+    "instagram": "Instagram",
+    "facebook": "Facebook",
+    "twitter": "Twitter",
+    "linkedin": "LinkedIn",
+    "rights": "All rights reserved.",
+    "developedBy": "Developed with ❤️ by",
+    "webazul": "WebAzul",
+    "privacyPolicy": "Privacy Policy",
+    "termsService": "Terms of Service",
+    "cookies": "Cookie Policy",
+    "backToTop": "Back to Top"
+  },
+  "csv": {
+    "headers": {
+      "name": "Name",
+      "brand": "Brand",
+      "model": "Model",
+      "version": "Version",
+      "year": "Year",
+      "price": "Price",
+      "originalPrice": "Original Price",
+      "promotional": "Promotional",
+      "mileage": "Mileage",
+      "fuel": "Fuel",
+      "power": "Power HP",
+      "displacement": "Displacement",
+      "transmission": "Transmission",
+      "color": "Color",
+      "doors": "Doors",
+      "seats": "Seats",
+      "condition": "Condition",
+      "description": "Description",
+      "profilePhoto": "Main Photo URL",
+      "photo1": "Photo 1 URL",
+      "photo2": "Photo 2 URL",
+      "photo3": "Photo 3 URL",
+      "photo4": "Photo 4 URL",
+      "stockNumber": "Stock Number",
+      "registrationDate": "Registration Date",
+      "monthlyTax": "Monthly Tax",
+      "annualTax": "Annual Tax",
+      "stamp": "Stamp",
+      "moderatorFee": "Moderator Fee",
+      "status": "Status"
+    },
+    "values": {
+      "yes": "Yes",
+      "no": "No"
+    }
+  }
+}

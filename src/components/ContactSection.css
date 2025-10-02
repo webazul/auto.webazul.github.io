@@ -105,6 +105,10 @@
   flex-shrink: 0;
 }
 
+.contact-icon svg {
+  color: white !important;
+}
+
 .contact-item div p {
   color: #374151;
   margin: 0;
@@ -488,9 +492,29 @@
   }
 }
 
+@media (max-width: 768px) {
+  .contact-info-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  .contact-item:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
 @media (max-width: 480px) {
   .contact-info-column h3 {
     font-size: 1.5rem;
+  }
+
+  .contact-info-list {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-item:last-child {
+    grid-column: 1;
   }
 
   .contact-item {

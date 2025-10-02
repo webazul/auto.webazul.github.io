@@ -89,7 +89,7 @@ export default function Footer() {
               <a href="/" onClick={(e) => { e.preventDefault(); scrollToSection('hero'); }}>
                 {t('footer.home')}
               </a>
-              <a href="/cars">
+              <a href="/stock">
                 {t('footer.stock')}
               </a>
               <a href="/" onClick={(e) => { e.preventDefault(); scrollToSection('services'); }}>

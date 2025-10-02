@@ -4,10 +4,14 @@ import LanguageDetector from 'i18next-browser-languagedetector'
 
 // Importar traduções
 import ptTranslations from './locales/pt.json'
+import enTranslations from './locales/en.json'
 
 const resources = {
   pt: {
     translation: ptTranslations
+  },
+  en: {
+    translation: enTranslations
   }
 }
 

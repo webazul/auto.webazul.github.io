@@ -164,7 +164,7 @@ export default function ServicesSection() {
             <div className="cta-actions">
               <button
                 className="cta-btn primary"
-                onClick={() => navigate('/cars')}
+                onClick={() => navigate('/stock')}
               >
                 <FaCar />
                 <span>Ver Stock Disponível</span>

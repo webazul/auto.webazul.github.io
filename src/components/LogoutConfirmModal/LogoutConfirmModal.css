@@ -1,0 +1,20 @@
+/* ============================================ */
+/* LOGOUT CONFIRMATION MODAL                   */
+/* ============================================ */
+
+.logout-confirm-modal .user-info {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.logout-confirm-modal .modal-btn.confirm-btn {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  border: none;
+}
+
+.logout-confirm-modal .modal-btn.confirm-btn:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  transform: translateY(-1px);
+}

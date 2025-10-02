@@ -4,7 +4,8 @@ import ProtectedRoute from './components/ProtectedRoute'
 import FloatingWhatsApp from './components/FloatingWhatsApp'
 
 import Home from './pages/Home'
-import Cars from './pages/Cars'
+import Stock from './pages/Stock'
+import ProductView from './pages/ProductView'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Admin from './pages/Admin'
@@ -18,7 +19,8 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/cars" element={<Cars />} />
+            <Route path="/stock" element={<Stock />} />
+            <Route path="/v/:id" element={<ProductView />} />
             <Route path="/login" element={<Login />} />
             <Route path="/setup" element={<InitialSetup />} />
 
@@ -41,9 +43,9 @@ function App() {
             />
 
           </Routes>
+          <FloatingWhatsApp />
         </Router>
       </AuthProvider>
-      <FloatingWhatsApp />
     </div>
   )
 }

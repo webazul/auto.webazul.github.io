@@ -1,6 +1,4 @@
-import { useState, useEffect } from 'react'
-import { collection, query, where, getDocs } from 'firebase/firestore'
-import { db } from '../firebase/config'
+import { useMemo } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import Header from '../components/Header'
 import HeroSection from '../components/HeroSection'
@@ -15,47 +13,13 @@ import '../styles/home-design-system.css'
 import './Home.css'
 
 export default function Home() {
-  const { currentStore } = useAuth()
-  const [cars, setCars] = useState([])
-  const [availableBrands, setAvailableBrands] = useState([])
-  const [loading, setLoading] = useState(true)
+  const { products, productsLoading } = useAuth()
 
-  useEffect(() => {
-    const fetchActiveCars = async () => {
-      if (!currentStore?.id) return
-
-      try {
-        setLoading(true)
-
-        const productsRef = collection(db, 'products')
-        const q = query(
-          productsRef,
-          where('storeId', '==', currentStore.id),
-          where('status', '==', 'active'),
-          where('active', '==', true)
-        )
-
-        const querySnapshot = await getDocs(q)
-        const carsData = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }))
-
-        setCars(carsData)
-
-        // Extrair marcas únicas dos carros disponíveis (compatibilidade com brand/marca)
-        const brands = [...new Set(carsData.map(car => car.brand || car.marca).filter(Boolean))]
-        setAvailableBrands(brands.sort())
-
-      } catch (error) {
-        console.error('Erro ao buscar carros:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchActiveCars()
-  }, [currentStore])
+  // Extrair marcas únicas dos produtos (compatibilidade com brand/marca)
+  const availableBrands = useMemo(() => {
+    const brands = [...new Set(products.map(car => car.brand || car.marca).filter(Boolean))]
+    return brands.sort()
+  }, [products])
 
   return (
     <div className="home-page">
@@ -63,7 +27,7 @@ export default function Home() {
       <Header />
       <main>
         <HeroSection />
-        <SearchSection cars={cars} availableBrands={availableBrands} loading={loading} />
+        <SearchSection cars={products} availableBrands={availableBrands} loading={productsLoading} />
         <ServicesSection />
         <TrustSection />
         <TestimonialsSection />

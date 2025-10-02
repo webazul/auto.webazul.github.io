@@ -9,7 +9,8 @@ export default function SearchableSelect({
   placeholder = "Selecione",
   searchable = true,
   label,
-  required = false
+  required = false,
+  maxInitialOptions = 10 // Máximo de opções a exibir sem busca
 }) {
   const [isOpen, setIsOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
@@ -52,6 +53,13 @@ export default function SearchableSelect({
   const filteredOptions = options.filter(option =>
     option.label.toLowerCase().includes(searchTerm.toLowerCase())
   )
+
+  // Se não está buscando e há muitas opções, limita ao máximo inicial
+  const displayOptions = searchTerm.trim() === '' && options.length > maxInitialOptions
+    ? filteredOptions.slice(0, maxInitialOptions)
+    : filteredOptions
+
+  const hasMoreOptions = searchTerm.trim() === '' && options.length > maxInitialOptions
 
   // Pegar label da opção selecionada
   const selectedOption = options.find(opt => opt.value === value)
@@ -134,18 +142,29 @@ export default function SearchableSelect({
               {placeholder}
             </div>
 
-            {filteredOptions.length > 0 ? (
-              filteredOptions.map((option) => (
-                <div
-                  key={option.value}
-                  className={`option ${value === option.value ? 'selected' : ''}`}
-                  onClick={() => handleSelect(option.value)}
-                >
-                  {option.label}
-                </div>
-              ))
+            {displayOptions.length > 0 ? (
+              <>
+                {displayOptions.map((option) => (
+                  <div
+                    key={option.value}
+                    className={`option ${value === option.value ? 'selected' : ''}`}
+                    onClick={() => handleSelect(option.value)}
+                  >
+                    {option.label}
+                  </div>
+                ))}
+
+                {/* Mensagem de mais resultados */}
+                {hasMoreOptions && (
+                  <div className="more-results-hint">
+                    Mostrando {maxInitialOptions} de {options.length} resultados. Digite para buscar...
+                  </div>
+                )}
+              </>
             ) : (
-              <div className="no-results">Nenhum resultado encontrado</div>
+              <div className="no-results">
+                {searchTerm ? 'Nenhum resultado encontrado' : 'Nenhuma opção disponível'}
+              </div>
             )}
           </div>
         </div>

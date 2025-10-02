@@ -263,19 +263,6 @@
     display: none;
   }
 
-  .header-actions {
-    display: flex;
-  }
-
-  .action-btn {
-    padding: var(--home-space-md) var(--home-space-xl);
-    font-size: var(--home-text-sm);
-  }
-
-  .action-btn span {
-    display: none;
-  }
-
   .mobile-menu-btn {
     display: block;
   }

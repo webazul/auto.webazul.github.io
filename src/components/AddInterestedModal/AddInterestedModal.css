@@ -1,0 +1,213 @@
+/* Add Interested Modal */
+.add-interested-overlay {
+  z-index: 99999 !important;
+}
+
+.add-interested-modal .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.add-interested-modal .modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.add-interested-modal .modal-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.add-interested-modal .modal-close-btn:hover {
+  color: #111827;
+}
+
+.add-interested-modal .modal-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.add-interested-modal .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.add-interested-modal .form-group label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.add-interested-modal .form-group input,
+.add-interested-modal .form-group select,
+.add-interested-modal .form-group textarea {
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  transition: border-color 0.2s;
+}
+
+.add-interested-modal .form-group input:focus,
+.add-interested-modal .form-group select:focus,
+.add-interested-modal .form-group textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.add-interested-modal .form-group textarea {
+  resize: vertical;
+  font-family: inherit;
+}
+
+.add-interested-modal .radio-group {
+  display: flex;
+  gap: 1rem;
+}
+
+.add-interested-modal .radio-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.add-interested-modal .radio-option:hover {
+  border-color: #d1d5db;
+  background: #f9fafb;
+}
+
+.add-interested-modal .radio-option input[type="radio"] {
+  cursor: pointer;
+}
+
+.add-interested-modal .radio-option input[type="radio"]:checked + span {
+  font-weight: 600;
+  color: #3b82f6;
+}
+
+.add-interested-modal .radio-option:has(input:checked) {
+  border-color: #3b82f6;
+  background: #eff6ff;
+}
+
+.add-interested-modal .selected-client-preview {
+  padding: 1rem;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.add-interested-modal .selected-client-preview strong {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.add-interested-modal .modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.add-interested-modal .modal-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.add-interested-modal .modal-btn.cancel-btn {
+  background: white;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+.add-interested-modal .modal-btn.cancel-btn:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.add-interested-modal .modal-btn.primary-btn {
+  background: #10b981;
+  color: white;
+}
+
+.add-interested-modal .modal-btn.primary-btn:hover:not(:disabled) {
+  background: #059669;
+}
+
+.add-interested-modal .modal-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.add-interested-modal .spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid white;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .add-interested-modal {
+    max-width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  .add-interested-modal .radio-group {
+    flex-direction: column;
+  }
+
+  .add-interested-modal .modal-footer {
+    flex-direction: column-reverse;
+  }
+
+  .add-interested-modal .modal-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
