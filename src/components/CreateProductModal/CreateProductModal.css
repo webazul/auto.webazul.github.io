@@ -420,9 +420,11 @@
 /* PHOTOS SECTION                              */
 /* ============================================ */
 
+/* Removido padding para evitar conflito
 .photos-section {
   padding: var(--admin-space-lg) 0;
 }
+*/
 
 .photo-upload-section {
   margin-bottom: var(--admin-space-3xl);
@@ -471,6 +473,7 @@
   font-size: var(--admin-text-3xl);
 }
 
+/* Removido margin-bottom para evitar conflito
 .photo-group {
   margin-bottom: var(--admin-space-3xl);
 }
@@ -481,6 +484,7 @@
   font-weight: var(--admin-font-semibold);
   margin-bottom: var(--admin-space-md);
 }
+*/
 
 .photo-description {
   color: var(--admin-gray-500);
@@ -604,7 +608,6 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: var(--admin-space-lg);
-  margin-bottom: var(--admin-space-lg);
 }
 
 .gallery-photo-item,

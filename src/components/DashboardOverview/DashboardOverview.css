@@ -43,7 +43,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   border: 1px solid #e5e7eb;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 1rem;
   transition: all 0.2s ease;
 }
@@ -123,6 +123,9 @@
   font-weight: 600;
   color: #374151;
   font-size: 0.875rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .brand-bar {
@@ -257,7 +260,8 @@
 /* Sales Chart */
 .sales-chart-container {
   width: 100%;
-  overflow: visible;
+  overflow-x: auto;
+  overflow-y: visible;
   padding: 8rem 0 1rem 0;
   margin-top: -5rem;
 }
@@ -457,5 +461,10 @@
 
   .tooltip-row {
     font-size: 0.75rem;
+  }
+
+  .sales-chart-container {
+    padding: 6rem 0 1rem 0;
+    margin-top: -4rem;
   }
 }

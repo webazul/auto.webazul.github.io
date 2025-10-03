@@ -369,11 +369,8 @@ export default function ManageProductModal({
             </button>
           </div>
 
-          {/* Body */}
-          <div className="modal-body manage-modal-body">
-            <div className="product-summary-tabs">
-                {/* Tabs Navigation */}
-                <div className="tabs-nav">
+          {/* Tabs Navigation */}
+          <div className="modal-tabs-nav">
                   <button
                     className={`tab-btn ${activeTab === 'info' ? 'active' : ''}`}
                     onClick={() => setActiveTab('info')}
@@ -413,15 +410,16 @@ export default function ManageProductModal({
                   >
                     Ações
                   </button>
-                </div>
+          </div>
 
-                {/* Tabs Content */}
-                <div className="tabs-content">
+          {/* Modal Body */}
+          <div className="modal-body">
                   {/* Aba Informações */}
                   {activeTab === 'info' && (
-                    <div className="tab-panel">
+                    <div className="product-view">
                       {/* Informações Básicas */}
                       <div className="summary-section">
+                        <h5>Informações Básicas</h5>
                         <div className="summary-item">
                           <span className="label">Nome:</span>
                           <span className="value">{product.name || product.nome}</span>
@@ -496,6 +494,7 @@ export default function ManageProductModal({
 
                       {/* Especificações Técnicas (anteriormente em Detalhes) */}
                       <div className="summary-section">
+                        <h5>Especificações Técnicas</h5>
                         {((product.color && product.color.trim()) || (product.cor && product.cor.trim())) && (
                           <div className="summary-item">
                             <span className="label">Cor:</span>
@@ -568,6 +567,7 @@ export default function ManageProductModal({
                       {/* Equipamentos */}
                       {product.features && product.features.length > 0 && (
                         <div className="summary-section">
+                          <h5>Equipamentos</h5>
                           <div className="features-list">
                             {product.features.map((feature, index) => (
                               <div key={index} className="feature-item">
@@ -585,6 +585,7 @@ export default function ManageProductModal({
                   {activeTab === 'details' && (
                     <div className="tab-panel">
                       <div className="summary-section">
+                        <h5>Especificações Técnicas</h5>
                         {((product.color && product.color.trim()) || (product.cor && product.cor.trim())) && (
                           <div className="summary-item">
                             <span className="label">Cor:</span>
@@ -657,6 +658,7 @@ export default function ManageProductModal({
                       {/* Equipamentos */}
                       {product.features && product.features.length > 0 && (
                         <div className="summary-section">
+                          <h5>Equipamentos</h5>
                           <div className="features-list">
                             {product.features.map((feature, index) => (
                               <div key={index} className="feature-item">
@@ -672,7 +674,6 @@ export default function ManageProductModal({
 
                   {/* Aba Fotos */}
                   {activeTab === 'photos' && localProduct && (
-                    <div className="tab-panel">
                       <div className="photos-section">
                         {/* Foto de Perfil */}
                         <div className="photo-group">
@@ -684,11 +685,18 @@ export default function ManageProductModal({
                                 className="profile-photo-preview"
                               />
                             ) : (
-                              <div className="profile-photo-upload">
-                                <div className="profile-upload-label">
-                                  <FaCamera size={32} />
-                                  <span>Nenhuma foto de perfil</span>
-                                </div>
+                              <div
+                                className="empty-profile-photo"
+                                onClick={() => {
+                                  if (onEdit && product?.status !== 'sold') {
+                                    onEdit(product, 3)
+                                  }
+                                }}
+                                style={{ cursor: product?.status !== 'sold' ? 'pointer' : 'default' }}
+                              >
+                                <FaCamera />
+                                <p>Nenhuma foto de perfil</p>
+                                <span>Adicione uma foto de destaque para este veículo</span>
                               </div>
                             )}
                           </div>
@@ -704,20 +712,27 @@ export default function ManageProductModal({
                                 </div>
                               ))
                             ) : (
-                              <div className="empty-gallery">
-                                <FaImages size={48} />
+                              <div
+                                className="empty-gallery"
+                                onClick={() => {
+                                  if (onEdit && product?.status !== 'sold') {
+                                    onEdit(product, 3)
+                                  }
+                                }}
+                                style={{ cursor: product?.status !== 'sold' ? 'pointer' : 'default' }}
+                              >
+                                <FaImages />
                                 <p>Nenhuma foto na galeria</p>
+                                <span>Adicione fotos adicionais deste veículo</span>
                               </div>
                             )}
                           </div>
                         </div>
                       </div>
-                    </div>
                   )}
 
                   {/* Aba Arquivos */}
                   {activeTab === 'files' && (
-                    <div className="tab-panel">
                       <div className="files-section">
                         {loadingFiles ? (
                           <div className="loading-files">
@@ -784,19 +799,21 @@ export default function ManageProductModal({
                             </div>
                           </>
                         ) : (
-                          <div className="empty-files">
+                          <div
+                            className="empty-files"
+                            onClick={() => onAddFile && onAddFile(product)}
+                            style={{ cursor: 'pointer' }}
+                          >
                             <FaUpload size={48} />
                             <p>Nenhum arquivo anexado</p>
                             <span>Envie documentos, certificados ou outros arquivos relacionados ao veículo</span>
                           </div>
                         )}
                       </div>
-                    </div>
                   )}
 
                   {/* Aba Interessados */}
                   {activeTab === 'interested' && (
-                    <div className="tab-panel">
                       <div className="interested-section">
                         {loadingInterested ? (
                           <div className="loading-interested">
@@ -860,19 +877,21 @@ export default function ManageProductModal({
                             ))}
                           </div>
                         ) : (
-                          <div className="empty-interested">
+                          <div
+                            className="empty-interested"
+                            onClick={() => onAddInterested && onAddInterested(product)}
+                            style={{ cursor: 'pointer' }}
+                          >
                             <FaUsers />
                             <p>Nenhum interessado ainda</p>
                             <span>Adicione clientes interessados neste veículo</span>
                           </div>
                         )}
                       </div>
-                    </div>
                   )}
 
                   {/* Aba Comprador */}
                   {activeTab === 'buyer' && (
-                    <div className="tab-panel">
                       <div className="buyer-section">
                         {product?.soldTo ? (
                           <div className="buyer-info-card">
@@ -912,45 +931,17 @@ export default function ManageProductModal({
                           <div className="empty-buyer">
                             <FaInfoCircle />
                             <p>Informações do comprador não disponíveis</p>
+                            <span>Este produto ainda não foi vendido</span>
                           </div>
                         )}
                       </div>
-                    </div>
                   )}
 
                   {/* Aba Ações */}
                   {activeTab === 'actions' && (
-                    <div className="tab-panel">
                       <div className="actions-section">
-                        {/* Status Atual - Comentado por enquanto */}
-                        {/* <div className="current-status">
-                          <h4>Status Atual</h4>
-                          <span className={`product-status-badge ${
-                            product?.status || (
-                              product?.vendido ? 'sold' :
-                              product?.excluido ? 'deleted' :
-                              product?.ativo ? 'active' : 'inactive'
-                            )
-                          }`}>
-                            {(() => {
-                              const status = product?.status || (
-                                product?.vendido ? 'sold' :
-                                product?.excluido ? 'deleted' :
-                                product?.ativo ? 'active' : 'inactive'
-                              )
-                              switch (status) {
-                                case 'active': return 'Ativo'
-                                case 'sold': return 'Vendido'
-                                case 'deleted': return 'Excluído'
-                                default: return 'Inativo'
-                              }
-                            })()}
-                          </span>
-                        </div> */}
-
-                        {/* Ações Disponíveis */}
-                        <div className="available-actions">
-                          <h4>Ações Disponíveis</h4>
+                        <div className="actions-view-section">
+                          <h5>Ações Disponíveis</h5>
 
                           {(() => {
                             const currentStatus = product?.status || (
@@ -961,9 +952,10 @@ export default function ManageProductModal({
 
                             if (currentStatus === 'deleted') {
                               return (
-                                <div className="info-message">
+                                <div className="empty-actions">
                                   <FaInfoCircle />
-                                  <p>Este produto foi excluído e não pode ser modificado.</p>
+                                  <p>Produto excluído</p>
+                                  <span>Este produto foi excluído e não pode ser modificado</span>
                                 </div>
                               )
                             }
@@ -1005,14 +997,11 @@ export default function ManageProductModal({
                           })()}
                         </div>
                       </div>
-                    </div>
                   )}
-                </div>
-              </div>
           </div>
 
           {/* Footer com botões contextuais */}
-          <div className="modal-footer manage-modal-footer">
+          <div className="modal-footer">
             <div className="contextual-actions">
               {activeTab === 'info' && (
                 product?.status !== 'sold' ? (

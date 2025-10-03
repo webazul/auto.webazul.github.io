@@ -765,7 +765,6 @@ body.modal-open {
 .dashboard-content p {
   color: var(--admin-gray-500);
   font-size: var(--admin-text-sm);
-  margin-bottom: var(--admin-space-3xl);
 }
 
 /* Info Cards */
@@ -1188,7 +1187,7 @@ body.modal-open {
   letter-spacing: 0.025em;
 }
 
-/* Photos Upload Styles */
+/* Photos Upload Styles - Comentado para evitar conflito com ManageProductModal.css
 .photos-section {
   padding: var(--admin-space-lg) 0;
 }
@@ -1203,6 +1202,7 @@ body.modal-open {
   font-weight: var(--admin-font-semibold);
   margin-bottom: var(--admin-space-md);
 }
+*/
 
 .photo-description {
   color: var(--admin-gray-500);
@@ -1277,12 +1277,14 @@ body.modal-open {
   background: var(--admin-danger-hover);
 }
 
+/* Comentado para evitar conflito com ManageProductModal.css
 .gallery-photos {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: var(--admin-space-lg);
   margin-bottom: var(--admin-space-lg);
 }
+*/
 
 .gallery-photo-item {
   position: relative;
@@ -2122,6 +2124,7 @@ body.modal-open {
   gap: 0.75rem;
 }
 
+/* Comentado para evitar conflito com ManageProductModal.css
 .file-item {
   display: flex;
   align-items: center;
@@ -2244,6 +2247,7 @@ body.modal-open {
   background: #fee2e2;
   border-color: #dc2626;
 }
+*/
 
 .files-info {
   padding: 1rem;

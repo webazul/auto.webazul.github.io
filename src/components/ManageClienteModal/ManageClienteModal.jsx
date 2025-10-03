@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { FaTimes, FaEdit, FaTrash, FaShoppingBag, FaUser } from 'react-icons/fa'
+import { FaTimes, FaEdit, FaTrash, FaShoppingBag, FaUser, FaCog } from 'react-icons/fa'
 import './ManageClienteModal.css'
 
 export default function ManageClienteModal({
@@ -171,23 +171,29 @@ export default function ManageClienteModal({
           </form>
         ) : (
           <>
-            {/* Tabs Navigation - apenas se for comprador */}
-            {isBuyer && (
-              <div className="modal-tabs-nav">
-                <button
-                  className={`tab-btn ${activeTab === 'info' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('info')}
-                >
-                  <FaUser /> Informações
-                </button>
+            {/* Tabs Navigation */}
+            <div className="modal-tabs-nav">
+              <button
+                className={`tab-btn ${activeTab === 'info' ? 'active' : ''}`}
+                onClick={() => setActiveTab('info')}
+              >
+                Informações
+              </button>
+              {isBuyer && (
                 <button
                   className={`tab-btn ${activeTab === 'purchases' ? 'active' : ''}`}
                   onClick={() => setActiveTab('purchases')}
                 >
-                  <FaShoppingBag /> Compras
+                  Compras
                 </button>
-              </div>
-            )}
+              )}
+              <button
+                className={`tab-btn ${activeTab === 'actions' ? 'active' : ''}`}
+                onClick={() => setActiveTab('actions')}
+              >
+                Ações
+              </button>
+            </div>
 
             <div className="modal-body">
               {/* Tab Informações */}
@@ -277,21 +283,47 @@ export default function ManageClienteModal({
                   )}
                 </div>
               )}
+
+              {/* Tab Ações */}
+              {activeTab === 'actions' && (
+                <div className="actions-section">
+                  <div className="actions-view-section">
+                    <h4>Ações Disponíveis</h4>
+                    <div className="action-buttons">
+                      <button
+                        className="contextual-btn danger"
+                        onClick={onDelete}
+                        style={{ width: '100%' }}
+                      >
+                        <FaTrash />
+                        Excluir Cliente
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="modal-footer">
-              <button
-                className="modal-btn delete-btn"
-                onClick={onDelete}
-              >
-                <FaTrash /> Excluir
-              </button>
-              <button
-                className="modal-btn confirm-btn"
-                onClick={() => setIsEditMode(true)}
-              >
-                <FaEdit /> Editar
-              </button>
+              <div className="contextual-actions">
+                {(activeTab === 'info' || activeTab === 'purchases') && (
+                  <button
+                    className="contextual-btn primary"
+                    onClick={() => setIsEditMode(true)}
+                  >
+                    <FaEdit />
+                    Editar Informações
+                  </button>
+                )}
+                {activeTab === 'actions' && (
+                  <button
+                    className="contextual-btn secondary"
+                    onClick={onClose}
+                  >
+                    Fechar
+                  </button>
+                )}
+              </div>
             </div>
           </>
         )}

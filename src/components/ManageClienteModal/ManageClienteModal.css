@@ -2,6 +2,49 @@
 /* MANAGE CLIENTE MODAL                        */
 /* ============================================ */
 
+/* Modal Header */
+.modal-cliente .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  padding-right: 3.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  position: relative;
+}
+
+.modal-cliente .modal-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.modal-cliente .modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(0, 0, 0, 0.05);
+  border: none;
+  font-size: 1.25rem;
+  color: #6b7280;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 10;
+}
+
+.modal-cliente .modal-close:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #111827;
+  transform: scale(1.1);
+}
+
 /* Form styles (shared with AddClienteModal) */
 .modal-cliente .form-group {
   margin-bottom: 1.5rem;
@@ -285,14 +328,70 @@
 }
 
 .modal-btn.confirm-btn {
-  background: #dbeafe;
-  color: #2563eb;
-  border: 1px solid #bfdbfe;
+  background: #3b82f6;
+  color: white;
+  border: none;
 }
 
 .modal-btn.confirm-btn:hover {
-  background: #bfdbfe;
+  background: #2563eb;
   transform: translateY(-1px);
+}
+
+/* ============================================ */
+/* CONTEXTUAL ACTIONS (FOOTER BUTTONS)         */
+/* ============================================ */
+
+.contextual-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.contextual-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.contextual-btn.primary {
+  background: #3b82f6;
+  color: white;
+}
+
+.contextual-btn.primary:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.contextual-btn.danger {
+  background: #ef4444;
+  color: white;
+}
+
+.contextual-btn.danger:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.contextual-btn.secondary {
+  background: white;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+.contextual-btn.secondary:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
 }
 
 /* ============================================ */
@@ -324,4 +423,33 @@
     align-items: flex-start;
     gap: 0.5rem;
   }
+}
+
+/* ============================================ */
+/* ACTIONS TAB                                 */
+/* ============================================ */
+
+.actions-section {
+  padding: 1.5rem 0;
+}
+
+.actions-view-section {
+  background: #f9fafb;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.actions-view-section h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
