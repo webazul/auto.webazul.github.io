@@ -229,6 +229,7 @@ export default function DashboardCarsView({
             <FaFileDownload />
             <span>Exportar CSV</span>
           </button>
+          {/* Botão de Dados Teste - Comentado temporariamente
           <button
             className="add-btn"
             style={{ background: '#f59e0b', borderColor: '#f59e0b' }}
@@ -238,6 +239,7 @@ export default function DashboardCarsView({
             🧪
             <span>Dados Teste</span>
           </button>
+          */}
         </div>
       </div>
 
