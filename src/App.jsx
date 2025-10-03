@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import FloatingWhatsApp from './components/FloatingWhatsApp'
+import ScrollToTop from './components/ScrollToTop'
 
 import Home from './pages/Home'
 import Stock from './pages/Stock'
@@ -17,6 +18,7 @@ function App() {
     <div className="app">
       <AuthProvider>
         <Router>
+          <ScrollToTop />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/stock" element={<Stock />} />
