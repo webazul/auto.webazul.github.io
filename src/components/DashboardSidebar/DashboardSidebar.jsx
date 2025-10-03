@@ -19,7 +19,8 @@ export default function DashboardSidebar({
   menuItems,
   currentUser,
   currentStore,
-  onLogout
+  onLogout,
+  onProfileClick
 }) {
   const handleMenuClick = (menuId) => {
     onMenuChange(menuId)
@@ -84,12 +85,18 @@ export default function DashboardSidebar({
 
         <div className="sidebar-footer">
           <div className="user-info">
-            <FaUser className="user-icon" />
-            <div className="user-details">
-              <span className="user-email">{currentUser?.email}</span>
-              {currentStore?.domain && (
-                <span className="user-domain">{currentStore.domain}</span>
-              )}
+            <div
+              className="user-info-clickable"
+              onClick={onProfileClick}
+              title="Ver perfil"
+            >
+              <FaUser className="user-icon" />
+              <div className="user-details">
+                <span className="user-email">{currentUser?.email}</span>
+                {currentStore?.domain && (
+                  <span className="user-domain">{currentStore.domain}</span>
+                )}
+              </div>
             </div>
             <button
               className="logout-icon-btn"

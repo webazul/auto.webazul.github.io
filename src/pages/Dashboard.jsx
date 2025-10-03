@@ -25,6 +25,7 @@ import DashboardSettings from '../components/DashboardSettings'
 import DashboardPagination from '../components/DashboardPagination'
 import DashboardCarsView from '../components/DashboardCarsView'
 import DashboardClientesView from '../components/DashboardClientesView'
+import DashboardProfileView from '../components/DashboardProfileView/DashboardProfileView'
 import {
   FaCar,
   FaHome,
@@ -906,6 +907,13 @@ export default function Dashboard() {
             formatCurrency={formatCurrency}
           />
         )
+      case 'profile':
+        return (
+          <DashboardProfileView
+            currentUser={currentUser}
+            currentStore={currentStore}
+          />
+        )
       case 'settings':
         return (
           <DashboardSettings
@@ -937,6 +945,10 @@ export default function Dashboard() {
         currentUser={currentUser}
         currentStore={currentStore}
         onLogout={() => setShowLogoutModal(true)}
+        onProfileClick={() => {
+          setActiveMenu('profile')
+          setSidebarOpen(false)
+        }}
       />
 
       {/* Main Content */}
